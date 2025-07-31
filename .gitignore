@@ -1,0 +1,87 @@
+# === Kotlin Multiplatform ===
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/build.gradle.kts
+!**/settings.gradle.kts
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+*.hprof
+*.log
+.idea_modules/
+
+# Kotlin/Compose Web (WASM)
+jsApp/build/
+jsApp/node_modules/
+*.wasm
+*.map
+*.js
+npm-debug.log
+.yarn/
+.yarnrc.yml
+.pnp.*
+
+# Compose Multiplatform Desktop
+desktopApp/build/
+*.dmg
+*.exe
+*.msi
+*.pkg
+*.app
+*.deb
+*.snap
+*.rpm
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
+*.apk
+*.ap_
+*.aab
+android/.idea/
+*.keystore
+android/gradle-app.setting
+
+# iOS (Xcode)
+ios/Pods/
+ios/DerivedData/
+ios/.idea/
+ios/.DS_Store
+ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcuserstate
+ios/*.xcuserdatad
+ios/*.xcworkspace
+ios/build/
+ios/fastlane/report.xml
+ios/.swiftpm
+ios/.build/
+
+# Common
+.DS_Store
+Thumbs.db
+
+# VS Code (optional)
+.vscode/
+
+# Local environment / secrets (you may adjust)
+.env
+local.properties
+secrets.properties
+
+# Ktor / HTTP clients
+logs/
+
+# Kotlin
+.kotlin/

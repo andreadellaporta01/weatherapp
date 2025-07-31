@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="hourly_forecast">Pronóstico por hora</string>
+    <string name="weekly_forecast">Pronóstico semanal</string>
+    <string name="data_not_found">Datos no encontrados</string>
+    <string name="city_not_found">Ciudad no encontrada</string>
+    <string name="weather">Clima</string>
+    <string name="add_city">Agregar ciudad</string>
+    <string name="search_city_airport">Buscar una ciudad o aeropuerto</string>
+    <string name="bottom_bar">Buscar una ciudad o aeropuerto</string>
+    <string name="settings">Configuración</string>
+    <string name="language">Idioma</string>
+</resources>

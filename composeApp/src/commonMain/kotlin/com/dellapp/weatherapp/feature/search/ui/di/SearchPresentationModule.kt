@@ -1,0 +1,9 @@
+package com.dellapp.weatherapp.feature.search.ui.di
+
+import com.dellapp.weatherapp.feature.search.ui.SearchViewModel
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
+
+val searchPresentationModule = module {
+    viewModel { SearchViewModel(get(), get()) }
+}

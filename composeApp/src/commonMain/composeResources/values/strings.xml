@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="hourly_forecast">Hourly Forecast</string>
+    <string name="weekly_forecast">Weekly Forecast</string>
+    <string name="data_not_found">Data not found</string>
+    <string name="city_not_found">City not found</string>
+    <string name="weather">Weather</string>
+    <string name="add_city">Add City</string>
+    <string name="search_city_airport">Search for a city or airport</string>
+    <string name="bottom_bar">Search for a city or airport</string>
+    <string name="settings">Settings</string>
+    <string name="language">Language</string>
+</resources>

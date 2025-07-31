@@ -1,0 +1,60 @@
+package com.dellapp.weatherapp.core.ui.components
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import com.dellapp.weatherapp.core.common.BottomBarHeight
+import com.dellapp.weatherapp.core.common.XLargeSpacing
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import weatherapp.composeapp.generated.resources.Res
+import weatherapp.composeapp.generated.resources.add_bottom
+import weatherapp.composeapp.generated.resources.bottom_bar
+import weatherapp.composeapp.generated.resources.settings
+
+@Composable
+fun BottomBar(
+    modifier: Modifier,
+    onAddClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
+) {
+    Box(modifier = modifier.height(BottomBarHeight)) {
+        Image(
+            painter = painterResource(Res.drawable.bottom_bar),
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).height(88.dp),
+            contentScale = ContentScale.FillWidth
+        )
+        Image(
+            painter = painterResource(Res.drawable.add_bottom),
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.BottomCenter).fillMaxHeight().clickable {
+                onAddClick()
+            },
+            contentScale = ContentScale.FillHeight
+        )
+        Icon(
+            imageVector = Icons.Outlined.Settings,
+            contentDescription = stringResource(Res.string.settings),
+            tint = Color.White,
+            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
+                .padding(end = XLargeSpacing).size(36.dp).clickable {
+                    onSettingsClick()
+                },
+        )
+    }
+}
