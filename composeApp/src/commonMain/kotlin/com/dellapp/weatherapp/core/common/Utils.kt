@@ -1,5 +1,6 @@
 package com.dellapp.weatherapp.core.common
 
+import LocalNames
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -67,5 +68,14 @@ fun String.toLanguageCode(): String = when (this) {
     "Italiano" -> "it"
     "Español" -> "es"
     else -> "en" // fallback
+}
+
+fun LocalNames.getByIsoCode(isoCode: String): String? {
+    return when (isoCode) {
+        "it" -> it
+        "en" -> en
+        "es" -> es
+        else -> null
+    }
 }
 

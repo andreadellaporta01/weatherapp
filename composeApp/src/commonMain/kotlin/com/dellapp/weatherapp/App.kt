@@ -15,11 +15,11 @@ import com.dellapp.weatherapp.core.domain.di.coreDomainModule
 import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.di.corePresentationModule
 import com.dellapp.weatherapp.feature.home.domain.di.homeDomainModule
-import com.dellapp.weatherapp.feature.home.ui.HomeScreen
 import com.dellapp.weatherapp.feature.home.ui.di.homePresentationModule
 import com.dellapp.weatherapp.feature.search.domain.di.searchDomainModule
 import com.dellapp.weatherapp.feature.search.ui.di.searchPresentationModule
 import com.dellapp.weatherapp.feature.settings.ui.di.settingsPresentationModule
+import com.dellapp.weatherapp.feature.splash.ui.SplashScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -43,7 +43,7 @@ fun App() {
 
     Theme {
         Navigator(
-            screen = HomeScreen(selectedLanguage)
+            screen = SplashScreen()
         )
     }
 }

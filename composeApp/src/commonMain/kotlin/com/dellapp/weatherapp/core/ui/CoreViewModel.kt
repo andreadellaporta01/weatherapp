@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dellapp.weatherapp.core.common.Language
 import com.dellapp.weatherapp.core.domain.usecase.GetLanguageUseCase
+import dev.jordond.compass.Location
+import dev.jordond.compass.geolocation.GeolocatorResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

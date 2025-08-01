@@ -25,6 +25,8 @@ kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.7.1"
 datastore = "1.1.7"
 voyager = "1.1.0-beta02"
+compass = "2.3.1"
+stateholder = "1.2.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -98,6 +100,17 @@ voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", vers
 voyager-bottomSheetNavigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+
+# Compass
+compass-geolocation = { module = "dev.jordond.compass:geolocation", version.ref = "compass" }
+compass-geolocation-mobile = { module = "dev.jordond.compass:geolocation-mobile", version.ref = "compass" }
+compass-geolocation-browser = { module = "dev.jordond.compass:geolocation-browser", version.ref = "compass" }
+compass-permissions-mobile = { module = "dev.jordond.compass:permissions-mobile", version.ref = "compass" }
+
+# Stateholder
+stateHolder = { module = "dev.stateholder:core", version.ref = "stateholder" }
+stateHolder-compose = { module = "dev.stateholder:extensions-compose", version.ref = "stateholder" }
+stateHolder-voyager = { module = "dev.stateholder:extensions-voyager", version.ref = "stateholder" }
 
 [bundles]
 compose = [

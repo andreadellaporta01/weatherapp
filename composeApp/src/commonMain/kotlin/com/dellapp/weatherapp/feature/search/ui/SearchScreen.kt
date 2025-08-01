@@ -46,7 +46,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.back
 import weatherapp.composeapp.generated.resources.city_not_found
-import weatherapp.composeapp.generated.resources.settings
 import weatherapp.composeapp.generated.resources.weather
 
 class SearchScreen(
@@ -67,13 +66,14 @@ class SearchScreen(
         }
 
         GradientBox(
+            modifier = Modifier.fillMaxSize(),
             colors = listOf(StartGradientBg, EndGradientBg),
-            modifier = Modifier.fillMaxSize()
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
                     .padding(WindowInsets.safeContent.asPaddingValues()),
             ) {
+                Spacer(Modifier.height(MediumSpacing))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,

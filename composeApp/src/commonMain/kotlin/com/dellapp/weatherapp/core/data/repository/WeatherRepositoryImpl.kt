@@ -1,5 +1,6 @@
 package com.dellapp.weatherapp.core.data.repository
 
+import com.dellapp.weatherapp.core.common.getByIsoCode
 import com.dellapp.weatherapp.core.data.api.WeatherApiService
 import com.dellapp.weatherapp.core.data.mapper.WeatherMapper
 import com.dellapp.weatherapp.core.domain.model.City
@@ -23,8 +24,10 @@ class WeatherRepositoryImpl(
 
     override suspend fun getWeather(lat: Double, lon: Double, lang: String): Result<Weather> {
         return try {
-            val dto = apiService.getWeather(lat, lon, lang)
-            val weather = mapper.mapToWeather(dto)
+            val weatherDto = apiService.getWeather(lat, lon, lang)
+            val city = apiService.getCityByCoordinates(lat, lon).firstOrNull()
+            val cityName = city?.localNames?.getByIsoCode(lang) ?: city?.name
+            val weather = mapper.mapToWeather(weatherDto, cityName)
             Result.success(weather)
         } catch (e: Exception) {
             Result.failure(e)

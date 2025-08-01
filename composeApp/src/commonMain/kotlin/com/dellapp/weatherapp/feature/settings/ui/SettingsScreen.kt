@@ -1,5 +1,6 @@
 package com.dellapp.weatherapp.feature.settings.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -72,13 +73,14 @@ class SettingsScreen(
         }
 
         GradientBox(
+            modifier = Modifier.fillMaxSize(),
             colors = listOf(StartGradientBg, EndGradientBg),
-            modifier = Modifier.fillMaxSize()
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
                     .padding(WindowInsets.safeContent.asPaddingValues()),
             ) {
+                Spacer(Modifier.height(MediumSpacing))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -148,7 +150,8 @@ class SettingsScreen(
 
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.tertiary)
                 ) {
                     languages.forEach { language ->
                         DropdownMenuItem(

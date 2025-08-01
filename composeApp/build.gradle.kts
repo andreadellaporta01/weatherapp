@@ -74,6 +74,10 @@ kotlin {
             // DataStore
             implementation(libs.androidx.datastore.datastore)
             implementation(libs.androidx.datastore.preferences)
+
+            // Geocoding and Permissions
+            implementation(libs.compass.geolocation.mobile)
+            implementation(libs.compass.permissions.mobile)
         }
         commonMain.dependencies {
             // Compose Multiplatform
@@ -116,10 +120,23 @@ kotlin {
             implementation(libs.voyager.bottomSheetNavigator)
             implementation(libs.voyager.tabNavigator)
             implementation(libs.voyager.transitions)
+
+            // Permissions and Geolocation
+            implementation(libs.compass.geolocation)
+
+            // State Holder
+            implementation(libs.stateHolder)
+            implementation(libs.stateHolder.voyager)
+            implementation(libs.stateHolder.compose)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.compass.geolocation.browser)
         }
         iosMain.dependencies {
             // iOS-specific Ktor client
             implementation(libs.ktor.client.darwin)
+            implementation(libs.compass.geolocation.mobile)
+            implementation(libs.compass.permissions.mobile)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -13,4 +13,7 @@
     <string name="language">Idioma</string>
     <string name="add_city_forecast">Añade una ciudad para ver las previsiones</string>
     <string name="back">Atrás</string>
+    <string name="current_position">Recuperar posición</string>
+    <string name="location_permission_required">Se requiere permiso de ubicación para utilizar esta función</string>
+    <string name="open_settings">Abrir configuración</string>
 </resources>

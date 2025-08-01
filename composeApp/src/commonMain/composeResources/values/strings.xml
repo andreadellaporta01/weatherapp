@@ -13,4 +13,7 @@
     <string name="language">Language</string>
     <string name="add_city_forecast">Add a city to view the forecast</string>
     <string name="back">Back</string>
+    <string name="current_position">Get current position</string>
+    <string name="location_permission_required">Location permission is required to use this feature</string>
+    <string name="open_settings">Open settings</string>
 </resources>

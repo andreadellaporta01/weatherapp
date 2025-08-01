@@ -44,6 +44,18 @@ class WeatherApiService {
         }.body()
     }
 
+    suspend fun getCityByCoordinates(
+        lat: Double,
+        lon: Double,
+    ): List<CityDto> {
+        return httpClient.get("$baseUrlGeo/reverse") {
+            parameter("lat", lat)
+            parameter("lon", lon)
+            parameter("limit", 1)
+            parameter("appid", apiKey)
+        }.body()
+    }
+
     suspend fun getWeather(
         lat: Double, lon: Double, lang: String, units: String = "metric"
     ): WeatherDto {

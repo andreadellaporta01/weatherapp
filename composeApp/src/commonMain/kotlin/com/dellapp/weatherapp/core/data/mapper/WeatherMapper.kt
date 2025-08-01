@@ -10,8 +10,9 @@ import com.dellapp.weatherapp.core.domain.model.WeatherCondition
 import com.dellapp.weatherapp.core.domain.model.WeatherInfo
 
 class WeatherMapper {
-    fun mapToWeather(dto: WeatherDto): Weather {
+    fun mapToWeather(dto: WeatherDto, cityName: String?): Weather {
         return Weather(
+            cityName = cityName.orEmpty(),
             currentWeather = CurrentWeather(
                 temperature = dto.current?.temp ?: 0.0,
                 minTemperature = dto.daily?.firstOrNull()?.temp?.min ?: 0.0,

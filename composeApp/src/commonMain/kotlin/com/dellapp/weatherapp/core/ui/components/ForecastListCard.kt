@@ -36,7 +36,6 @@ import com.dellapp.weatherapp.core.common.XXLargeSpacing
 import com.dellapp.weatherapp.core.domain.model.WeatherInfo
 import org.jetbrains.compose.resources.stringResource
 import weatherapp.composeapp.generated.resources.Res
-import weatherapp.composeapp.generated.resources.add_city
 import weatherapp.composeapp.generated.resources.add_city_forecast
 import weatherapp.composeapp.generated.resources.hourly_forecast
 import weatherapp.composeapp.generated.resources.weekly_forecast
@@ -53,10 +52,10 @@ fun ForecastListCard(
     var selectedForecast by remember { mutableStateOf(ForecastType.HOURLY) }
 
     GradientBox(
+        modifier = modifier.clip(Shapes.extraLarge).fillMaxWidth(),
         colors = listOf(StartForecastGradientBg, EndForecastGradientBg),
         gradientType = GradientType.RADIAL,
-        modifier = modifier.clip(Shapes.extraLarge).fillMaxWidth(),
-        paddingValues = paddingValues
+        paddingValues = paddingValues,
     ) {
         if (isLoading) {
             CircularProgressIndicator(

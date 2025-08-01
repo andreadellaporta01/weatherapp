@@ -7,6 +7,7 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 data class Weather(
+    val cityName: String,
     val currentWeather: CurrentWeather,
     val hourlyForecast: List<WeatherInfo>,
     val dailyForecast: List<WeatherInfo>

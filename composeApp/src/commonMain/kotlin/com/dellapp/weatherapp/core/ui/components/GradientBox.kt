@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -22,7 +23,8 @@ fun GradientBox(
     gradientType: GradientType = GradientType.LINEAR,
     radius: Float = 500f,
     paddingValues: PaddingValues = PaddingValues(0.dp),
-    content: @Composable BoxScope.() -> Unit = {}
+    contentAlignment: Alignment = Alignment.TopStart,
+    content: @Composable BoxScope.() -> Unit = {},
 ) {
     val brush = when (gradientType) {
         GradientType.LINEAR -> Brush.linearGradient(colors)
@@ -33,6 +35,7 @@ fun GradientBox(
     Box(
         modifier = modifier.background(brush = brush)
             .padding(paddingValues),
-        content = content
+        content = content,
+        contentAlignment = contentAlignment
     )
 }

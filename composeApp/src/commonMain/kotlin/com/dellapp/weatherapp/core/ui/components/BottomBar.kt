@@ -18,19 +18,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.dellapp.weatherapp.core.common.BottomBarHeight
+import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.XLargeSpacing
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.add_bottom
 import weatherapp.composeapp.generated.resources.bottom_bar
+import weatherapp.composeapp.generated.resources.current_position
+import weatherapp.composeapp.generated.resources.ic_pin
+import weatherapp.composeapp.generated.resources.ic_settings
 import weatherapp.composeapp.generated.resources.settings
 
 @Composable
 fun BottomBar(
     modifier: Modifier,
     onAddClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    onPositionClick: () -> Unit = {}
 ) {
     Box(modifier = modifier.height(BottomBarHeight)) {
         Image(
@@ -48,12 +53,21 @@ fun BottomBar(
             contentScale = ContentScale.FillHeight
         )
         Icon(
-            imageVector = Icons.Outlined.Settings,
+            painter = painterResource(Res.drawable.ic_settings),
             contentDescription = stringResource(Res.string.settings),
             tint = Color.White,
             modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
-                .padding(end = XLargeSpacing).size(36.dp).clickable {
+                .padding(end = XLargeSpacing, top = LargeSpacing).size(36.dp).clickable {
                     onSettingsClick()
+                },
+        )
+        Icon(
+            painter = painterResource(Res.drawable.ic_pin),
+            contentDescription = stringResource(Res.string.current_position),
+            tint = Color.White,
+            modifier = Modifier.align(Alignment.CenterStart).fillMaxHeight()
+                .padding(start = XLargeSpacing, top = LargeSpacing).size(36.dp).clickable {
+                    onPositionClick()
                 },
         )
     }

@@ -5,6 +5,5 @@ import com.dellapp.weatherapp.core.domain.model.Weather
 data class HomeUiState(
     val isLoading: Boolean = false,
     val weather: Weather? = null,
-    val cityName: String? = null,
     val error: String? = null,
 )
