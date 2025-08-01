@@ -6,9 +6,11 @@
     <string name="data_not_found">Dati non trovati</string>
     <string name="city_not_found">Città non trovata</string>
     <string name="weather">Meteo</string>
-    <string name="add_city">Aggiungi città</string>
+    <string name="add_city">Aggiungi una città usando il bottone in basso</string>
     <string name="search_city_airport">Cerca una città o un aeroporto</string>
     <string name="bottom_bar">Cerca una città o un aeroporto</string>
     <string name="settings">Impostazioni</string>
     <string name="language">Lingua</string>
+    <string name="add_city_forecast">Aggiungi una città per visualizzare le previsioni</string>
+    <string name="back">Indietro</string>
 </resources>

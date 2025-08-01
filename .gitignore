@@ -85,3 +85,4 @@ logs/
 
 # Kotlin
 .kotlin/
+composeApp/preferences.properties

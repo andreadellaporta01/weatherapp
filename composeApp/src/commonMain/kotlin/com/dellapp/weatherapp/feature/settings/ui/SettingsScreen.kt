@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,117 +33,138 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.dellapp.weatherapp.core.common.EndGradientBg
 import com.dellapp.weatherapp.core.common.Language
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.StartGradientBg
+import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.components.GradientBox
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import weatherapp.composeapp.generated.resources.Res
+import weatherapp.composeapp.generated.resources.back
 import weatherapp.composeapp.generated.resources.language
 import weatherapp.composeapp.generated.resources.settings
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SettingsScreen(
-    selectedLanguage: Language,
-    onLanguageSelected: () -> Unit,
-    viewModel: SettingsViewModel = koinViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsState()
+class SettingsScreen(
+    private val selectedLanguage: Language
+) : Screen {
 
-    LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                is SettingsViewModel.SettingsEvent.NavigateBack -> {
-                    onLanguageSelected()
+    @Composable
+    override fun Content() {
+        val viewModel: SettingsViewModel = koinViewModel()
+        val coreViewModel: CoreViewModel = koinViewModel()
+        val navigator = LocalNavigator.currentOrThrow
+        val uiState by viewModel.uiState.collectAsState()
+
+        LaunchedEffect(Unit) {
+            viewModel.events.collect { event ->
+                when (event) {
+                    is SettingsViewModel.SettingsEvent.NavigateBack -> {
+                        coreViewModel.getLanguage()
+                    }
+                }
+            }
+        }
+
+        GradientBox(
+            colors = listOf(StartGradientBg, EndGradientBg),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(WindowInsets.safeContent.asPaddingValues()),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(Res.string.back),
+                        tint = Color.White,
+                        modifier = Modifier.clickable { navigator.pop() }
+                    )
+                    Spacer(modifier = Modifier.width(MediumSpacing))
+                    Text(
+                        stringResource(Res.string.settings),
+                        color = Color.White,
+                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp)
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(Modifier.height(LargeSpacing))
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator()
+                    } else if (uiState.error != null) {
+
+                    } else {
+                        LanguageSelectorRow(
+                            selectedLanguage = selectedLanguage,
+                            onLanguageSelected = { language ->
+                                viewModel.setPreferredLanguage(language.iso)
+                            }
+                        )
+                    }
                 }
             }
         }
     }
 
-    GradientBox(
-        colors = listOf(StartGradientBg, EndGradientBg),
-        modifier = Modifier.fillMaxSize()
+    @Composable
+    private fun LanguageSelectorRow(
+        modifier: Modifier = Modifier,
+        selectedLanguage: Language,
+        onLanguageSelected: (Language) -> Unit
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(WindowInsets.safeContent.asPaddingValues()),
-            horizontalAlignment = Alignment.CenterHorizontally
+        var expanded by remember { mutableStateOf(false) }
+        var currentLanguage by remember { mutableStateOf(selectedLanguage) }
+
+        val languages = Language.entries.toList()
+
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable { expanded = true }
+                .padding(horizontal = LargeSpacing, vertical = MediumSpacing),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                stringResource(Res.string.settings),
-                color = Color.White,
-                style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp)
+                text = stringResource(Res.string.language),
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White
             )
-            Spacer(Modifier.height(LargeSpacing))
-            if(uiState.isLoading) {
-                CircularProgressIndicator()
-            } else if(uiState.error != null) {
 
-            } else {
-                LanguageSelectorRow(
-                    selectedLanguage = selectedLanguage,
-                    onLanguageSelected = { language ->
-                        viewModel.setPreferredLanguage(language.iso)
-                    }
+            Box {
+                Text(
+                    text = currentLanguage.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.9f)
                 )
-            }
-        }
-    }
-}
 
-@Composable
-fun LanguageSelectorRow(
-    modifier: Modifier = Modifier,
-    selectedLanguage: Language,
-    onLanguageSelected: (Language) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    var currentLanguage by remember { mutableStateOf(selectedLanguage) }
-
-    val languages = Language.entries.toList()
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { expanded = true }
-            .padding(horizontal = LargeSpacing, vertical = MediumSpacing),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(Res.string.language),
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color.White
-        )
-
-        Box {
-            Text(
-                text = currentLanguage.name,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.9f)
-            )
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                languages.forEach { language ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = language.name,
-                                color = if (language == currentLanguage) MaterialTheme.colorScheme.primary else Color.Unspecified
-                            )
-                        },
-                        onClick = {
-                            currentLanguage = language
-                            expanded = false
-                            onLanguageSelected(language)
-                        }
-                    )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    languages.forEach { language ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = language.name,
+                                    color = if (language == currentLanguage) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )
+                            },
+                            onClick = {
+                                currentLanguage = language
+                                expanded = false
+                                onLanguageSelected(language)
+                            }
+                        )
+                    }
                 }
             }
         }

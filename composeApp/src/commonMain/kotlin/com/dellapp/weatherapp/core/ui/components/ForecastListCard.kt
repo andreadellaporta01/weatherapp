@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dellapp.weatherapp.core.common.EndForecastGradientBg
 import com.dellapp.weatherapp.core.common.ForecastType
@@ -35,6 +36,8 @@ import com.dellapp.weatherapp.core.common.XXLargeSpacing
 import com.dellapp.weatherapp.core.domain.model.WeatherInfo
 import org.jetbrains.compose.resources.stringResource
 import weatherapp.composeapp.generated.resources.Res
+import weatherapp.composeapp.generated.resources.add_city
+import weatherapp.composeapp.generated.resources.add_city_forecast
 import weatherapp.composeapp.generated.resources.hourly_forecast
 import weatherapp.composeapp.generated.resources.weekly_forecast
 
@@ -61,43 +64,53 @@ fun ForecastListCard(
             )
             return@GradientBox
         }
-
-        Column {
-            ForecastTabSwitcher(
-                selectedTab = selectedForecast,
-                onTabSelected = { selectedForecast = it }
-            )
-            Spacer(Modifier.height(20.dp))
-            when (selectedForecast) {
-                ForecastType.HOURLY -> {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(LargeSpacing),
-                        contentPadding = PaddingValues(horizontal = MediumSpacing)
-                    ) {
-                        items(hourlyWeatherInfos.size) { position ->
-                            ForecastCard(
-                                weatherInfo = hourlyWeatherInfos[position],
-                                isHourly = true,
-                            )
-                        }
-                    }
-                }
-
-                ForecastType.WEEKLY -> {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(LargeSpacing),
-                        contentPadding = PaddingValues(horizontal = MediumSpacing)
-                    ) {
-                        items(weeklyWeatherInfos.size) { position ->
-                            ForecastCard(
-                                weatherInfo = weeklyWeatherInfos[position],
-                                language = language
-                            )
-                        }
-                    }
-                }
+        if (hourlyWeatherInfos.isEmpty() || weeklyWeatherInfos.isEmpty()) {
+            Box(modifier = Modifier.align(Alignment.Center).padding(MediumSpacing)) {
+                Text(
+                    text = stringResource(Res.string.add_city_forecast),
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
-            Spacer(Modifier.height(20.dp))
+        } else {
+            Column {
+                ForecastTabSwitcher(
+                    selectedTab = selectedForecast,
+                    onTabSelected = { selectedForecast = it }
+                )
+                Spacer(Modifier.height(20.dp))
+                when (selectedForecast) {
+                    ForecastType.HOURLY -> {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(LargeSpacing),
+                            contentPadding = PaddingValues(horizontal = MediumSpacing)
+                        ) {
+                            items(hourlyWeatherInfos.size) { position ->
+                                ForecastCard(
+                                    weatherInfo = hourlyWeatherInfos[position],
+                                    isHourly = true,
+                                )
+                            }
+                        }
+                    }
+
+                    ForecastType.WEEKLY -> {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(LargeSpacing),
+                            contentPadding = PaddingValues(horizontal = MediumSpacing)
+                        ) {
+                            items(weeklyWeatherInfos.size) { position ->
+                                ForecastCard(
+                                    weatherInfo = weeklyWeatherInfos[position],
+                                    language = language
+                                )
+                            }
+                        }
+                    }
+                }
+                Spacer(Modifier.height(20.dp))
+            }
         }
     }
 }

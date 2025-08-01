@@ -110,10 +110,12 @@ kotlin {
             // Icons
             implementation(libs.compose.material.icons)
 
-            // DataStore
-            implementation(libs.androidx.datastore.datastore)
-            implementation(libs.androidx.datastore.preferences)
-            implementation(libs.remember.settings)
+            // Voyager
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenModel)
+            implementation(libs.voyager.bottomSheetNavigator)
+            implementation(libs.voyager.tabNavigator)
+            implementation(libs.voyager.transitions)
         }
         iosMain.dependencies {
             // iOS-specific Ktor client
@@ -125,6 +127,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.cio)
         }
     }
 }

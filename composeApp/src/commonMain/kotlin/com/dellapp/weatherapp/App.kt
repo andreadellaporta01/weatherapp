@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import cafe.adriel.voyager.navigator.Navigator
 import com.dellapp.weatherapp.core.common.AppDataStore
 import com.dellapp.weatherapp.core.common.AppDataStoreManager
 import com.dellapp.weatherapp.core.common.Context
@@ -17,15 +15,10 @@ import com.dellapp.weatherapp.core.domain.di.coreDomainModule
 import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.di.corePresentationModule
 import com.dellapp.weatherapp.feature.home.domain.di.homeDomainModule
-import com.dellapp.weatherapp.feature.home.ui.HomeRoute
 import com.dellapp.weatherapp.feature.home.ui.HomeScreen
 import com.dellapp.weatherapp.feature.home.ui.di.homePresentationModule
 import com.dellapp.weatherapp.feature.search.domain.di.searchDomainModule
-import com.dellapp.weatherapp.feature.search.ui.SearchRoute
-import com.dellapp.weatherapp.feature.search.ui.SearchScreen
 import com.dellapp.weatherapp.feature.search.ui.di.searchPresentationModule
-import com.dellapp.weatherapp.feature.settings.ui.SettingsRoute
-import com.dellapp.weatherapp.feature.settings.ui.SettingsScreen
 import com.dellapp.weatherapp.feature.settings.ui.di.settingsPresentationModule
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -39,7 +32,6 @@ import org.koin.dsl.module
 @Preview
 fun App() {
     val coreViewModel: CoreViewModel = koinViewModel()
-    val navController = rememberNavController()
     val localization = koinInject<Localization>()
     val selectedLanguage by coreViewModel.selectedLanguage.collectAsState()
 
@@ -50,43 +42,9 @@ fun App() {
     }
 
     Theme {
-        NavHost(
-            navController = navController,
-            startDestination = HomeRoute
-        ) {
-            composable<HomeRoute> { backStackEntry ->
-                val savedStateHandle = backStackEntry.savedStateHandle
-                val refreshTrigger = savedStateHandle.get<Boolean>("refresh_trigger") ?: false
-                HomeScreen(
-                    refreshTrigger = refreshTrigger,
-                    selectedLanguage = selectedLanguage,
-                    onNavigateToSearch = {
-                        navController.navigate(SearchRoute)
-                    },
-                    onNavigateToSettings = {
-                        navController.navigate(SettingsRoute)
-                    }
-                )
-            }
-            composable<SearchRoute> {
-                SearchScreen(
-                    onCitySelected = {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("refresh_trigger", true)
-                        navController.popBackStack()
-                    }
-                )
-            }
-            composable<SettingsRoute> {
-                SettingsScreen(
-                    selectedLanguage = selectedLanguage,
-                    onLanguageSelected = {
-                       coreViewModel.getLanguage()
-                    }
-                )
-            }
-        }
+        Navigator(
+            screen = HomeScreen(selectedLanguage)
+        )
     }
 }
 
