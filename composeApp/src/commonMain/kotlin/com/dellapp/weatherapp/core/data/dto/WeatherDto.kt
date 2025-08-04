@@ -52,7 +52,9 @@ data class Current(
     @SerialName("wind_gust")
     val windGust: Double? = null,
     @SerialName("wind_speed")
-    val windSpeed: Double? = null
+    val windSpeed: Double? = null,
+    @SerialName("rain")
+    val rain: Rain? = null
 )
 
 @Serializable
@@ -128,7 +130,7 @@ data class Hourly(
     @SerialName("wind_gust")
     val windGust: Double? = null,
     @SerialName("wind_speed")
-    val windSpeed: Double? = null
+    val windSpeed: Double? = null,
 )
 
 @Serializable
@@ -169,4 +171,10 @@ data class Temp(
     val morn: Double? = null,
     @SerialName("night")
     val night: Double? = null
+)
+
+@Serializable
+data class Rain(
+    @SerialName("1h")
+    val lastHour: Double? = null
 )

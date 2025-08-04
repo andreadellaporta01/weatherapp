@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import com.dellapp.weatherapp.core.common.SearchFieldColor
 import com.dellapp.weatherapp.core.common.Shapes
 import com.dellapp.weatherapp.core.common.SmallSpacing
 import org.jetbrains.compose.resources.stringResource
@@ -27,14 +28,9 @@ fun SearchBar(
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = Brush.linearGradient(
-        colors = listOf(Color(0xFF1E1B38), Color(0xFF1E1B38))
-    )
-
     Box(
         modifier = modifier
-            .background(brush = backgroundColor, shape = Shapes.medium)
-            .padding(all = SmallSpacing)
+            .background(color = SearchFieldColor, shape = Shapes.medium)
             .clip(Shapes.medium)
     ) {
         TextField(

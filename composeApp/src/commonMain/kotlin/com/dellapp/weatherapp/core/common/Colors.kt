@@ -25,8 +25,14 @@ val Cian = Color(0xFF32ADE6)
 val StartGradientBg = Color(0xFF2E335A)
 val EndGradientBg = Color(0xFF1C1B33)
 
-val StartForecastGradientBg = Color(0xFF45278B)
-val EndForecastGradientBg = Color(0xFF2E335A)
+val StartForecastGradientBg = Color(0xFF422E5A)
+val EndForecastGradientBg = Color(0xFF1C1B33)
+
+val StartSliderGradientBg = Color(0xFF3758B1)
+
+val EndSliderGradientBg = Color(0xFFE64395)
+val CardBorderColor = Color(0xFFC427FB).copy(alpha = 0.4f)
+val SearchFieldColor = Color(0xFF1E1B38)
 
 internal val LightColorScheme = lightColorScheme(
     primary = WhitePrimary,

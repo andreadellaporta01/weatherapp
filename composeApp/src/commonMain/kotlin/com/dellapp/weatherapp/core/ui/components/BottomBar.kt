@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.dellapp.weatherapp.core.common.BottomBarHeight
 import com.dellapp.weatherapp.core.common.LargeSpacing
-import com.dellapp.weatherapp.core.common.XLargeSpacing
+import com.dellapp.weatherapp.core.common.XXLargeSpacing
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import weatherapp.composeapp.generated.resources.Res
@@ -57,7 +55,7 @@ fun BottomBar(
             contentDescription = stringResource(Res.string.settings),
             tint = Color.White,
             modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
-                .padding(end = XLargeSpacing, top = LargeSpacing).size(36.dp).clickable {
+                .padding(end = XXLargeSpacing, top = LargeSpacing).size(36.dp).clickable {
                     onSettingsClick()
                 },
         )
@@ -66,7 +64,7 @@ fun BottomBar(
             contentDescription = stringResource(Res.string.current_position),
             tint = Color.White,
             modifier = Modifier.align(Alignment.CenterStart).fillMaxHeight()
-                .padding(start = XLargeSpacing, top = LargeSpacing).size(36.dp).clickable {
+                .padding(start = XXLargeSpacing, top = LargeSpacing).size(36.dp).clickable {
                     onPositionClick()
                 },
         )

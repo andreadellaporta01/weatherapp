@@ -5,7 +5,10 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeFormat
 import kotlinx.datetime.toLocalDateTime
+import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -17,14 +20,19 @@ fun parseTimestampSecondsToLocalDateTime(
     return instant.toLocalDateTime(timeZone)
 }
 
-fun LocalDateTime.formatToAmPm(): String {
+fun LocalDateTime.formatToAmPm(withMinutes: Boolean = false): String {
     val hour = this.hour
     val amPm = if (hour < 12) "AM" else "PM"
     val formattedHour = when (hour % 12) {
         0 -> 12
         else -> hour % 12
     }
-    return "$formattedHour $amPm"
+    val minute = this.minute.toString().padStart(2, '0')
+    return if(withMinutes) {
+        "$formattedHour:$minute $amPm"
+    } else {
+        "$formattedHour $amPm"
+    }
 }
 
 fun DayOfWeek.localizedShortName(language: String): String {
@@ -77,5 +85,10 @@ fun LocalNames.getByIsoCode(isoCode: String): String? {
         "es" -> es
         else -> null
     }
+}
+
+fun mpsToKmh(mps: Double): Double {
+    val kmh = mps * 3.6
+    return (kmh * 10).roundToInt() / 10.0
 }
 

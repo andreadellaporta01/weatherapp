@@ -1,6 +1,7 @@
 package com.dellapp.weatherapp.core.data.api
 
 import CityDto
+import com.dellapp.weatherapp.core.data.dto.AirDto
 import com.dellapp.weatherapp.core.data.dto.WeatherDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -30,7 +31,7 @@ class WeatherApiService {
         }
     }
 
-    private val baseUrl = "https://api.openweathermap.org/data/3.0"
+    private val baseUrl = "https://api.openweathermap.org/data"
     private val baseUrlGeo = "https://api.openweathermap.org/geo/1.0"
     private val apiKey = "0c49d3c482fdd4b539ee199514fef912"
 
@@ -59,13 +60,24 @@ class WeatherApiService {
     suspend fun getWeather(
         lat: Double, lon: Double, lang: String, units: String = "metric"
     ): WeatherDto {
-        return httpClient.get("$baseUrl/onecall") {
+        return httpClient.get("$baseUrl/3.0/onecall") {
             parameter("lat", lat)
             parameter("lon", lon)
             parameter("appid", apiKey)
             parameter("units", units)
             parameter("lang", lang)
             parameter("exclude", "minutely,alerts")
+        }.body()
+    }
+
+    suspend fun getAirQuality(
+        lat: Double,
+        lon: Double,
+    ): AirDto {
+        return httpClient.get("$baseUrl/2.5/air_pollution") {
+            parameter("lat", lat)
+            parameter("lon", lon)
+            parameter("appid", apiKey)
         }.body()
     }
 

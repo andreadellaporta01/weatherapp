@@ -1,8 +1,14 @@
 package com.dellapp.weatherapp.feature.home.ui
 
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,9 +19,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,38 +36,47 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.dellapp.weatherapp.core.common.BottomBarHeight
+import com.dellapp.weatherapp.core.common.EndForecastGradientBg
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
+import com.dellapp.weatherapp.core.common.Shapes
+import com.dellapp.weatherapp.core.common.StartForecastGradientBg
 import com.dellapp.weatherapp.core.common.TinySpacing
-import com.dellapp.weatherapp.core.common.XXLargeSpacing
+import com.dellapp.weatherapp.core.common.XLargeSpacing
+import com.dellapp.weatherapp.core.common.XXXLargeSpacing
 import com.dellapp.weatherapp.core.common.geolocation.GeolocationModel
 import com.dellapp.weatherapp.core.common.geolocation.canShowAppSettings
 import com.dellapp.weatherapp.core.common.geolocation.showAppSettings
 import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.components.BottomBar
 import com.dellapp.weatherapp.core.ui.components.ForecastListCard
+import com.dellapp.weatherapp.core.ui.components.GradientBox
+import com.dellapp.weatherapp.core.ui.components.GradientType
+import com.dellapp.weatherapp.core.ui.components.WeatherDetail
 import com.dellapp.weatherapp.feature.search.ui.SearchScreen
 import com.dellapp.weatherapp.feature.settings.ui.SettingsScreen
-import dev.jordond.compass.Location
 import dev.stateholder.extensions.collectAsState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.add_city
@@ -67,11 +84,12 @@ import weatherapp.composeapp.generated.resources.data_not_found
 import weatherapp.composeapp.generated.resources.location_permission_required
 import weatherapp.composeapp.generated.resources.main_background
 import weatherapp.composeapp.generated.resources.open_settings
+import kotlin.math.roundToInt
 
 class HomeScreen(private val model: GeolocationModel) : Screen {
     @Composable
     override fun Content() {
-        val coreViewModel: CoreViewModel = koinViewModel()
+        val coreViewModel: CoreViewModel = getKoin().get()
         val viewModel: HomeViewModel = koinViewModel()
         val navigator = LocalNavigator.currentOrThrow
         val uiState by viewModel.uiState.collectAsState()
@@ -115,9 +133,16 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                 SnackbarHost(hostState = snackbarHostState)
             }
         ) {
-            Box(
+            BoxWithConstraints(
                 modifier = Modifier.fillMaxSize()
             ) {
+                val screenHeightPx = with(LocalDensity.current) { maxHeight.toPx() }
+                val fullHeightDp = maxHeight
+                val peekHeight = with(LocalDensity.current) { 300.dp.toPx() }
+                val initialOffset = screenHeightPx - peekHeight
+                val offsetY = remember { Animatable(initialOffset) }
+                val coroutineScope = rememberCoroutineScope()
+
                 Image(
                     painter = painterResource(Res.drawable.main_background),
                     contentDescription = null,
@@ -130,7 +155,7 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(Modifier.height(XXLargeSpacing))
+                    Spacer(Modifier.height(XXXLargeSpacing))
                     if (uiState.isLoading) {
                         CircularProgressIndicator()
                     } else if (uiState.error != null) {
@@ -186,14 +211,52 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                     }
                 }
 
-                ForecastListCard(
-                    hourlyWeatherInfos = uiState.weather?.hourlyForecast.orEmpty(),
-                    weeklyWeatherInfos = uiState.weather?.dailyForecast.orEmpty(),
-                    isLoading = uiState.isLoading,
-                    modifier = Modifier.align(Alignment.BottomCenter).heightIn(min = 200.dp),
-                    paddingValues = PaddingValues(bottom = BottomBarHeight, top = 20.dp),
-                    language = selectedLanguage
-                )
+                GradientBox(
+                    colors = listOf(StartForecastGradientBg, EndForecastGradientBg),
+                    gradientType = GradientType.LINEAR,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(fullHeightDp)
+                        .offset { IntOffset(0, offsetY.value.roundToInt()) }
+                        .align(Alignment.TopStart)
+                        .clip(Shapes.extraLarge)
+                        .pointerInput(Unit) {
+                            detectVerticalDragGestures(
+                                onVerticalDrag = { change, dragAmount ->
+                                    val newOffset = (offsetY.value + dragAmount).coerceIn(0f, initialOffset)
+                                    coroutineScope.launch {
+                                        offsetY.snapTo(newOffset)
+                                    }
+                                    change.consume()
+                                },
+                                onDragEnd = {
+                                    coroutineScope.launch {
+                                        val target = if (offsetY.value < initialOffset / 2) {
+                                            0f
+                                        } else {
+                                            initialOffset
+                                        }
+                                        offsetY.animateTo(target, animationSpec = tween(300))
+                                    }
+                                }
+                            )
+                        }
+                ) {
+                    if (offsetY.value < screenHeightPx * 0.3f) {
+                        WeatherDetail(uiState.weather, selectedLanguage)
+                    } else {
+                        ForecastListCard(
+                            hourlyWeatherInfos = uiState.weather?.hourlyForecast.orEmpty(),
+                            weeklyWeatherInfos = uiState.weather?.dailyForecast.orEmpty(),
+                            isLoading = uiState.isLoading,
+                            paddingValues = PaddingValues(
+                                top = XLargeSpacing
+                            ),
+                            horizontalPadding = PaddingValues(horizontal = 20.dp),
+                            language = selectedLanguage
+                        )
+                    }
+                }
 
                 BottomBar(
                     modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),

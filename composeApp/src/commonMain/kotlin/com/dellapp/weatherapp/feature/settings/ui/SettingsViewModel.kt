@@ -23,7 +23,7 @@ class SettingsViewModel(
         _uiState.update { it.copy(isLoading = true) }
         setLanguageUseCase(language)
             .onSuccess {
-                _events.emit(SettingsEvent.NavigateBack)
+                _events.emit(SettingsEvent.LanguageSelected)
             }
             .onFailure { exception ->
                 _uiState.update { it.copy(error = exception.message) }
@@ -32,6 +32,6 @@ class SettingsViewModel(
     }
 
     sealed class SettingsEvent {
-        object NavigateBack : SettingsEvent()
+        object LanguageSelected : SettingsEvent()
     }
 }

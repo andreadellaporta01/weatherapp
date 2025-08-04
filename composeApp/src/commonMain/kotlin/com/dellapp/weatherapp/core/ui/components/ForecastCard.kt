@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +21,7 @@ import com.dellapp.weatherapp.core.common.Language
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.SmallSpacing
+import com.dellapp.weatherapp.core.common.XXLargeSpacing
 import com.dellapp.weatherapp.core.domain.model.WeatherInfo
 
 @Composable
@@ -30,7 +32,7 @@ fun ForecastCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        shape = MaterialTheme.shapes.extraLarge,
+        shape = MaterialTheme.shapes.extraLarge.copy(all = CornerSize(XXLargeSpacing)),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.2f),
         ),

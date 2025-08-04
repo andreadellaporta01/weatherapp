@@ -21,18 +21,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.dellapp.weatherapp.core.common.EndForecastGradientBg
 import com.dellapp.weatherapp.core.common.ForecastType
 import com.dellapp.weatherapp.core.common.Language
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
-import com.dellapp.weatherapp.core.common.Shapes
-import com.dellapp.weatherapp.core.common.StartForecastGradientBg
-import com.dellapp.weatherapp.core.common.XXLargeSpacing
+import com.dellapp.weatherapp.core.common.XXXLargeSpacing
 import com.dellapp.weatherapp.core.domain.model.WeatherInfo
 import org.jetbrains.compose.resources.stringResource
 import weatherapp.composeapp.generated.resources.Res
@@ -47,21 +43,19 @@ fun ForecastListCard(
     isLoading: Boolean = false,
     language: Language,
     modifier: Modifier = Modifier,
+    horizontalPadding: PaddingValues = PaddingValues(0.dp),
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     var selectedForecast by remember { mutableStateOf(ForecastType.HOURLY) }
 
-    GradientBox(
-        modifier = modifier.clip(Shapes.extraLarge).fillMaxWidth(),
-        colors = listOf(StartForecastGradientBg, EndForecastGradientBg),
-        gradientType = GradientType.RADIAL,
-        paddingValues = paddingValues,
+    Box(
+        modifier = modifier.fillMaxWidth().padding(paddingValues),
     ) {
         if (isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center).padding(vertical = XXLargeSpacing)
+                modifier = Modifier.align(Alignment.Center).padding(vertical = XXXLargeSpacing)
             )
-            return@GradientBox
+            return
         }
         if (hourlyWeatherInfos.isEmpty() || weeklyWeatherInfos.isEmpty()) {
             Box(modifier = Modifier.align(Alignment.Center).padding(MediumSpacing)) {
@@ -76,14 +70,15 @@ fun ForecastListCard(
             Column {
                 ForecastTabSwitcher(
                     selectedTab = selectedForecast,
-                    onTabSelected = { selectedForecast = it }
+                    onTabSelected = { selectedForecast = it },
+                    horizontalPadding = horizontalPadding
                 )
                 Spacer(Modifier.height(20.dp))
                 when (selectedForecast) {
                     ForecastType.HOURLY -> {
                         LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(LargeSpacing),
-                            contentPadding = PaddingValues(horizontal = MediumSpacing)
+                            contentPadding = horizontalPadding
                         ) {
                             items(hourlyWeatherInfos.size) { position ->
                                 ForecastCard(
@@ -97,7 +92,7 @@ fun ForecastListCard(
                     ForecastType.WEEKLY -> {
                         LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(LargeSpacing),
-                            contentPadding = PaddingValues(horizontal = MediumSpacing)
+                            contentPadding = horizontalPadding
                         ) {
                             items(weeklyWeatherInfos.size) { position ->
                                 ForecastCard(
@@ -118,12 +113,12 @@ fun ForecastListCard(
 fun ForecastTabSwitcher(
     selectedTab: ForecastType,
     onTabSelected: (ForecastType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    horizontalPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .fillMaxWidth().padding(horizontalPadding),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         ForecastTab(

@@ -45,6 +45,7 @@ import com.dellapp.weatherapp.core.common.StartGradientBg
 import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.components.GradientBox
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.back
@@ -57,15 +58,16 @@ class SettingsScreen(
 
     @Composable
     override fun Content() {
+        val coreViewModel: CoreViewModel = getKoin().get()
         val viewModel: SettingsViewModel = koinViewModel()
-        val coreViewModel: CoreViewModel = koinViewModel()
         val navigator = LocalNavigator.currentOrThrow
         val uiState by viewModel.uiState.collectAsState()
+        var currentLanguage by remember { mutableStateOf(selectedLanguage) }
 
         LaunchedEffect(Unit) {
             viewModel.events.collect { event ->
                 when (event) {
-                    is SettingsViewModel.SettingsEvent.NavigateBack -> {
+                    is SettingsViewModel.SettingsEvent.LanguageSelected -> {
                         coreViewModel.getLanguage()
                     }
                 }
@@ -105,8 +107,9 @@ class SettingsScreen(
 
                     } else {
                         LanguageSelectorRow(
-                            selectedLanguage = selectedLanguage,
+                            currentLanguage = currentLanguage,
                             onLanguageSelected = { language ->
+                                currentLanguage = language
                                 viewModel.setPreferredLanguage(language.iso)
                             }
                         )
@@ -119,12 +122,10 @@ class SettingsScreen(
     @Composable
     private fun LanguageSelectorRow(
         modifier: Modifier = Modifier,
-        selectedLanguage: Language,
+        currentLanguage: Language,
         onLanguageSelected: (Language) -> Unit
     ) {
         var expanded by remember { mutableStateOf(false) }
-        var currentLanguage by remember { mutableStateOf(selectedLanguage) }
-
         val languages = Language.entries.toList()
 
         Row(
@@ -162,7 +163,6 @@ class SettingsScreen(
                                 )
                             },
                             onClick = {
-                                currentLanguage = language
                                 expanded = false
                                 onLanguageSelected(language)
                             }
