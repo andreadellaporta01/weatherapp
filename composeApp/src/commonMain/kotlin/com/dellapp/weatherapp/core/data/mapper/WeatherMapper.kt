@@ -71,7 +71,8 @@ class WeatherMapper {
         return City(
             name = dto.name.orEmpty(),
             lat = dto.lat ?: 0.0,
-            lon = dto.lon ?: 0.0
+            lon = dto.lon ?: 0.0,
+            country = dto.country.orEmpty()
         )
     }
 

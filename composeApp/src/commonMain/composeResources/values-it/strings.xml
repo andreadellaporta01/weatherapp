@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WeatherApp</string>
-    <string name="hourly_forecast">Previsioni orarie</string>
-    <string name="weekly_forecast">Previsioni settimanali</string>
+    <string name="hourly_forecast">Orarie</string>
+    <string name="weekly_forecast">Quotidiane</string>
     <string name="data_not_found">Dati non trovati</string>
     <string name="city_not_found">Città non trovata</string>
     <string name="weather">Meteo</string>
     <string name="add_city">Aggiungi una città usando il bottone in basso</string>
-    <string name="search_city_airport">Cerca una città o un aeroporto</string>
+    <string name="search_city_airport">Cerca una città</string>
     <string name="bottom_bar">Cerca una città o un aeroporto</string>
     <string name="settings">Impostazioni</string>
     <string name="language">Lingua</string>
@@ -43,4 +43,7 @@
     <string name="dew_point_description">Il punto di rugiada è %1$s in questo momento</string>
     <string name="visibility_description">Visibilità media. Il valore massimo della visibilità è 10 km</string>
     <string name="pressure_description">Pressione atmosferica al livello del mare</string>
+    <string name="invalid_coordinates">Coordinate non valide</string>
+    <string name="delete">ELIMINA</string>
+    <string name="refresh">Aggiorna</string>
 </resources>

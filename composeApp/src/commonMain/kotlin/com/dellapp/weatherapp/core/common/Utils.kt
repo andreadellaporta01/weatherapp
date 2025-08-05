@@ -5,8 +5,6 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format
-import kotlinx.datetime.format.DateTimeFormat
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
@@ -69,13 +67,6 @@ fun DayOfWeek.localizedShortName(language: String): String {
 
         else -> this.name.take(3) // fallback (e.g., "MON")
     }
-}
-
-fun String.toLanguageCode(): String = when (this) {
-    "English" -> "en"
-    "Italiano" -> "it"
-    "Español" -> "es"
-    else -> "en" // fallback
 }
 
 fun LocalNames.getByIsoCode(isoCode: String): String? {

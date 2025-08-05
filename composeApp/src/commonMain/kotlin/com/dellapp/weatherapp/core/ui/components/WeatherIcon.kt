@@ -23,6 +23,7 @@ import weatherapp.composeapp.generated.resources.tornado
 @Composable
 fun WeatherIcon(
     weatherCondition: WeatherCondition,
+    modifier: Modifier = Modifier,
     size: Dp = 30.dp,
 ) {
     val isNight = weatherCondition.iconCode.endsWith("n")
@@ -41,7 +42,7 @@ fun WeatherIcon(
     Icon(
         painter = painterResource(iconResource),
         contentDescription = "Weather: ${weatherCondition.description}",
-        modifier = Modifier.size(size = size),
+        modifier = modifier.size(size = size),
         tint = Color.Unspecified
     )
 }

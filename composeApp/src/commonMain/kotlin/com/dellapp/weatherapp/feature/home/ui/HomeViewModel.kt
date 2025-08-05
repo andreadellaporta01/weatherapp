@@ -3,8 +3,8 @@ package com.dellapp.weatherapp.feature.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dellapp.weatherapp.core.domain.model.City
-import com.dellapp.weatherapp.feature.home.domain.GetPreferredCityUseCase
-import com.dellapp.weatherapp.feature.home.domain.GetWeatherByLocationUseCase
+import com.dellapp.weatherapp.feature.home.domain.GetLastFavoriteCityUseCase
+import com.dellapp.weatherapp.core.domain.usecase.GetWeatherByLocationUseCase
 import dev.jordond.compass.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getWeatherByLocationUseCase: GetWeatherByLocationUseCase,
-    private val getPreferredCityUseCase: GetPreferredCityUseCase,
+    private val getLastFavoriteCityUseCase: GetLastFavoriteCityUseCase,
 ) : ViewModel() {
 
     private var lastLocation: Location? = null
@@ -25,9 +25,13 @@ class HomeViewModel(
     }
 
     fun getPreferredCity() = viewModelScope.launch {
-        getPreferredCityUseCase.invoke()
+        getLastFavoriteCityUseCase.invoke()
             .onSuccess { city ->
-                getCurrentWeather(city)
+                if(city != null) {
+                    getCurrentWeather(city)
+                } else {
+                    _uiState.update { it.copy(weather = null, isLoading = false) }
+                }
             }
             .onFailure {
                 _uiState.update { it.copy(weather = null, isLoading = false) }
@@ -38,12 +42,11 @@ class HomeViewModel(
         _uiState.update { it.copy(isLoading = true) }
         getWeatherByLocationUseCase.invoke(city.lat, city.lon)
             .onSuccess { weather ->
-                _uiState.update { it.copy(weather = weather) }
+                _uiState.update { it.copy(weather = weather, isLoading = false) }
             }
             .onFailure { exception ->
-                _uiState.update { it.copy(error = exception.message) }
+                _uiState.update { it.copy(error = exception.message, isLoading = false) }
             }
-        _uiState.update { it.copy(isLoading = false) }
     }
 
     fun getCurrentWeather(location: Location) = viewModelScope.launch {
@@ -53,12 +56,11 @@ class HomeViewModel(
             location.coordinates.longitude
         )
             .onSuccess { weather ->
-                _uiState.update { it.copy(weather = weather) }
+                _uiState.update { it.copy(weather = weather, isLoading = false) }
             }
             .onFailure { exception ->
-                _uiState.update { it.copy(error = exception.message) }
+                _uiState.update { it.copy(error = exception.message, isLoading = false) }
             }
-        _uiState.update { it.copy(isLoading = false) }
     }
 
     fun onLocationUpdate(location: Location?) {

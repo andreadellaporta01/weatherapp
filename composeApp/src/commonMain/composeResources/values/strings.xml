@@ -7,7 +7,7 @@
     <string name="city_not_found">City not found</string>
     <string name="weather">Weather</string>
     <string name="add_city">Add a city using the button below</string>
-    <string name="search_city_airport">Search for a city or airport</string>
+    <string name="search_city_airport">Search for a city</string>
     <string name="bottom_bar">Search for a city or airport</string>
     <string name="settings">Settings</string>
     <string name="language">Language</string>
@@ -44,4 +44,9 @@
     <string name="dew_point_description">The dew point is %1$s right now</string>
     <string name="visibility_description">Average visibility. The maximum value of the visibility is 10 km</string>
     <string name="pressure_description">Atmospheric pressure on the sea level</string>
+    <string name="invalid_coordinates">Not valid coordinates</string>
+    <string name="delete">DELETE</string>
+    <string name="favorite_city_card_high_temp">H: %1$s</string>
+    <string name="favorite_city_card_low_temp">L: %1$s</string>
+    <string name="refresh">Refresh</string>
 </resources>

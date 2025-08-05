@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WeatherApp</string>
-    <string name="hourly_forecast">Pronóstico por hora</string>
-    <string name="weekly_forecast">Pronóstico semanal</string>
+    <string name="hourly_forecast">Por hora</string>
+    <string name="weekly_forecast">Semanal</string>
     <string name="data_not_found">Datos no encontrados</string>
     <string name="city_not_found">Ciudad no encontrada</string>
     <string name="weather">Clima</string>
     <string name="add_city">Añade una ciudad utilizando el botón de abajo</string>
-    <string name="search_city_airport">Buscar una ciudad o aeropuerto</string>
+    <string name="search_city_airport">Buscar una ciudad</string>
     <string name="bottom_bar">Buscar una ciudad o aeropuerto</string>
     <string name="settings">Configuración</string>
     <string name="language">Idioma</string>
@@ -43,4 +43,7 @@
     <string name="dew_point_description">El punto de rocío es %1$s ahora mismo</string>
     <string name="visibility_description">Visibilidad media. El valor máximo de la visibilidad es de 10 km</string>
     <string name="pressure_description">Presión atmosférica a nivel del mar</string>
+    <string name="invalid_coordinates">Coordenadas no válidas</string>
+    <string name="delete">ELIMINAR</string>
+    <string name="refresh">Actualizar</string>
 </resources>
