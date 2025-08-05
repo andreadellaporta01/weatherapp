@@ -55,10 +55,10 @@ fun WeatherDetail(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize().padding(WindowInsets.safeContent.asPaddingValues())
     ) {
-
+        Spacer(modifier = Modifier.height(MediumSpacing))
         Text(
             text = weather?.cityName.orEmpty(),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.headlineLarge
         )
 

@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,19 +100,20 @@ fun WindCard(
             ) {
                 Image(
                     painter = painterResource(Res.drawable.wind),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                     modifier = Modifier.size(120.dp),
                     contentDescription = null
                 )
                 Text(
                     text = "${mpsToKmh(windSpeed)}\nkm/h",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelSmall
                 )
                 Icon(
                     painter = painterResource(Res.drawable.ic_wind_arrow),
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(120.dp)
                         .rotate(windAngle.toFloat())

@@ -17,7 +17,7 @@ compose = "1.8.2"
 compose-icons = "1.7.3"
 junit = "4.13.2"
 kotlin = "2.2.0"
-coil = "2.7.0"
+coil = "3.3.0"
 ktor = "3.2.2"
 koin = "4.1.0"
 kotlinx-serialization = "1.9.0"
@@ -81,7 +81,8 @@ koin-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
 # Image Loading
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil" }
 
 # Date/Time
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }

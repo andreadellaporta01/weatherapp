@@ -68,9 +68,6 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
 
-            // Image loading
-            implementation(libs.coil.compose)
-
             // DataStore
             implementation(libs.androidx.datastore.datastore)
             implementation(libs.androidx.datastore.preferences)
@@ -128,6 +125,10 @@ kotlin {
             implementation(libs.stateHolder)
             implementation(libs.stateHolder.voyager)
             implementation(libs.stateHolder.compose)
+
+            // Image loading
+            implementation(libs.coil.compose)
+            implementation(libs.coil.svg)
         }
         wasmJsMain.dependencies {
             implementation(libs.compass.geolocation.browser)

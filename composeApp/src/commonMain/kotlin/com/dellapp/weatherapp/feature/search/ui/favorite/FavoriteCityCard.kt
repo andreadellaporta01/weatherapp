@@ -2,12 +2,10 @@ package com.dellapp.weatherapp.feature.search.ui.favorite
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -32,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.TinySpacing
@@ -71,8 +70,8 @@ fun FavoriteCityCard(
         Box(
             modifier = Modifier.heightIn(min = 184.dp)
         ) {
-            Image(
-                painter = painterResource(Res.drawable.bg_weather_card),
+            AsyncImage(
+                model = Res.getUri("drawable/bg_weather_card.svg"),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxSize().align(Alignment.BottomStart)

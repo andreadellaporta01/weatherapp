@@ -1,6 +1,5 @@
 package com.dellapp.weatherapp.core.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -8,62 +7,59 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.dellapp.weatherapp.core.common.BottomBarHeight
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.XXLargeSpacing
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import weatherapp.composeapp.generated.resources.Res
-import weatherapp.composeapp.generated.resources.add_bottom
-import weatherapp.composeapp.generated.resources.bottom_bar
 import weatherapp.composeapp.generated.resources.current_position
-import weatherapp.composeapp.generated.resources.ic_pin
-import weatherapp.composeapp.generated.resources.ic_settings
 import weatherapp.composeapp.generated.resources.settings
 
 @Composable
 fun BottomBar(
     modifier: Modifier,
+    isDarkTheme: Boolean,
     onAddClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
-    onPositionClick: () -> Unit = {}
+    onPositionClick: () -> Unit = {},
 ) {
     Box(modifier = modifier.height(BottomBarHeight)) {
-        Image(
-            painter = painterResource(Res.drawable.bottom_bar),
+        AsyncImage(
+            model = Res.getUri(if (isDarkTheme) "drawable/bottom_bar_dark.svg" else "drawable/bottom_bar_light.svg"),
             contentDescription = null,
-            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).height(88.dp),
-            contentScale = ContentScale.FillWidth
+            modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
+            contentScale = ContentScale.FillHeight
         )
-        Image(
-            painter = painterResource(Res.drawable.add_bottom),
+        AsyncImage(
+            model = Res.getUri(if (isDarkTheme) "drawable/add_bottom_dark.svg" else "drawable/add_bottom_light.svg"),
             contentDescription = null,
+            contentScale = ContentScale.FillHeight,
             modifier = Modifier.align(Alignment.BottomCenter).fillMaxHeight().clickable {
                 onAddClick()
             },
-            contentScale = ContentScale.FillHeight
         )
-        Icon(
-            painter = painterResource(Res.drawable.ic_settings),
+        AsyncImage(
+            model = Res.getUri("drawable/ic_settings.svg"),
             contentDescription = stringResource(Res.string.settings),
-            tint = Color.White,
-            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+            modifier = Modifier.align(Alignment.CenterEnd)
                 .padding(end = XXLargeSpacing, top = LargeSpacing).size(36.dp).clickable {
                     onSettingsClick()
                 },
         )
-        Icon(
-            painter = painterResource(Res.drawable.ic_pin),
+        AsyncImage(
+            model = Res.getUri("drawable/ic_pin.svg"),
             contentDescription = stringResource(Res.string.current_position),
-            tint = Color.White,
-            modifier = Modifier.align(Alignment.CenterStart).fillMaxHeight()
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+            modifier = Modifier.align(Alignment.CenterStart)
                 .padding(start = XXLargeSpacing, top = LargeSpacing).size(36.dp).clickable {
                     onPositionClick()
                 },

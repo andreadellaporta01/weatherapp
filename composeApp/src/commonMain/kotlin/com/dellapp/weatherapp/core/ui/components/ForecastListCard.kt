@@ -147,7 +147,13 @@ fun ForecastTab(
     ) {
         Text(
             text = text,
-            color = if (isSelected) Color.White else Color.White.copy(alpha = 0.5f),
+            color = if (isSelected) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.primary.copy(
+                    alpha = 0.5f
+                )
+            },
             style = MaterialTheme.typography.bodyMedium
         )
     }

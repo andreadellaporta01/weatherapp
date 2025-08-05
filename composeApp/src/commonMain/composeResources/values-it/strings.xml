@@ -11,6 +11,7 @@
     <string name="bottom_bar">Cerca una città o un aeroporto</string>
     <string name="settings">Impostazioni</string>
     <string name="language">Lingua</string>
+    <string name="theme">Tema</string>
     <string name="add_city_forecast">Aggiungi una città per visualizzare le previsioni</string>
     <string name="back">Indietro</string>
     <string name="current_position">Recupera posizione</string>

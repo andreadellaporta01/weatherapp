@@ -5,53 +5,59 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 // Light Theme Colors
-val BlackPrimary = Color(0xFF000000)
-val LightSecondary = Color(0xFFEBEBF5).copy(alpha = 0.6f)
-val LightGrayTertiary = Color(0xFF3C3C43).copy(alpha = 0.3f)
-val LightBackground = Color(0xFFF8F8F8)
+
+val LightPrimary = Color(0xFF000000)
+val LightSecondary = Color(0xFF000000).copy(alpha = 0.7f)
+val LightGrayTertiary = Color(0xFF000000).copy(alpha = 0.5f)
+val LightBackground = Color(0xFFFFFFFF)
 val LightSurface = Color(0xFFFFFFFF)
 val LightTextColor = Color(0xFF333333)
+val LightStartForecastGradientBg = Color(0xFFB0C5E5)
+val LightEndForecastGradientBg = Color(0xFFFFFFFF)
 
 // Dark Theme Colors
-val WhitePrimary = Color(0xFFFFFFFF)
-val DarkSecondary = Color(0xFF3C3C43).copy(alpha = 0.6f)
-val DarkTertiary = Color(0xFFEBEBF5).copy(alpha = 0.3f)
+val DarkPrimary = Color(0xFFFFFFFF)
+val DarkSecondary = Color(0xFFFFFFFF).copy(alpha = 0.7f)
+val DarkTertiary = Color(0xFFFFFFFF).copy(alpha = 0.5f)
 val DarkBackground = Color(0xFF48319D)
 val DarkSurface = Color(0xFF2A2A2A)
 val DarkTextColor = Color(0xFFE0E0E0)
+val DarkStartForecastGradientBg = Color(0xFF422E5A)
+val DarkEndForecastGradientBg = Color(0xFF1C1B33)
 
 // Common Colors
 val Cian = Color(0xFF32ADE6)
 val StartGradientBg = Color(0xFF2E335A)
 val EndGradientBg = Color(0xFF1C1B33)
-
-val StartForecastGradientBg = Color(0xFF422E5A)
-val EndForecastGradientBg = Color(0xFF1C1B33)
+val CardBorderColor = Color(0xFFC427FB).copy(alpha = 0.4f)
+val SearchFieldColor = Color(0xFF1E1B38)
 
 val StartSliderGradientBg = Color(0xFF3758B1)
 
 val EndSliderGradientBg = Color(0xFFE64395)
-val CardBorderColor = Color(0xFFC427FB).copy(alpha = 0.4f)
-val SearchFieldColor = Color(0xFF1E1B38)
 
 internal val LightColorScheme = lightColorScheme(
-    primary = WhitePrimary,
+    primary = LightPrimary,
     background = LightBackground,
     onBackground = LightTextColor,
     surface = LightSurface,
-    onSurface = WhitePrimary,
+    onSurface = LightPrimary,
     secondary = LightSecondary,
     onSecondary = LightTextColor,
     tertiary = LightGrayTertiary,
+    surfaceContainerHigh = LightStartForecastGradientBg,
+    surfaceContainerLow = LightEndForecastGradientBg
 )
 
 internal val DarkColorScheme = darkColorScheme(
-    primary = BlackPrimary,
+    primary = DarkPrimary,
     background = DarkBackground,
     onBackground = DarkTextColor,
     surface = DarkSurface,
-    onSurface = BlackPrimary,
+    onSurface = DarkPrimary,
     secondary = DarkSecondary,
     onSecondary = DarkTextColor,
-    tertiary = DarkTertiary
+    tertiary = DarkTertiary,
+    surfaceContainerHigh = DarkStartForecastGradientBg,
+    surfaceContainerLow = DarkEndForecastGradientBg
 )

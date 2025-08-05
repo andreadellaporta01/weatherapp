@@ -1,9 +1,6 @@
 package com.dellapp.weatherapp.feature.settings.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,15 +15,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,13 +38,14 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.dellapp.weatherapp.core.common.EndGradientBg
 import com.dellapp.weatherapp.core.common.Language
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
-import com.dellapp.weatherapp.core.common.StartGradientBg
+import com.dellapp.weatherapp.core.common.SmallSpacing
+import com.dellapp.weatherapp.core.common.ThemeStyle
 import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.components.GradientBox
+import com.dellapp.weatherapp.core.ui.components.SelectorRow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,9 +53,11 @@ import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.back
 import weatherapp.composeapp.generated.resources.language
 import weatherapp.composeapp.generated.resources.settings
+import weatherapp.composeapp.generated.resources.theme
 
 class SettingsScreen(
-    private val selectedLanguage: Language
+    private val selectedLanguage: Language,
+    private val selectedThemeStyle: ThemeStyle
 ) : Screen {
 
     @Composable
@@ -63,110 +67,97 @@ class SettingsScreen(
         val navigator = LocalNavigator.currentOrThrow
         val uiState by viewModel.uiState.collectAsState()
         var currentLanguage by remember { mutableStateOf(selectedLanguage) }
+        var currentTheme by remember { mutableStateOf(selectedThemeStyle) }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val recompositionKey = remember(currentLanguage) { currentLanguage.iso }
 
         LaunchedEffect(Unit) {
             viewModel.events.collect { event ->
                 when (event) {
                     is SettingsViewModel.SettingsEvent.LanguageSelected -> {
+                        currentLanguage = event.language
                         coreViewModel.getLanguage()
                     }
-                }
-            }
-        }
 
-        GradientBox(
-            modifier = Modifier.fillMaxSize(),
-            colors = listOf(StartGradientBg, EndGradientBg),
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(WindowInsets.safeContent.asPaddingValues()),
-            ) {
-                Spacer(Modifier.height(MediumSpacing))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(Res.string.back),
-                        tint = Color.White,
-                        modifier = Modifier.clickable { navigator.pop() }
-                    )
-                    Spacer(modifier = Modifier.width(MediumSpacing))
-                    Text(
-                        stringResource(Res.string.settings),
-                        color = Color.White,
-                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp)
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(Modifier.height(LargeSpacing))
-                    if (uiState.isLoading) {
-                        CircularProgressIndicator()
-                    } else if (uiState.error != null) {
-
-                    } else {
-                        LanguageSelectorRow(
-                            currentLanguage = currentLanguage,
-                            onLanguageSelected = { language ->
-                                currentLanguage = language
-                                viewModel.setPreferredLanguage(language.iso)
-                            }
-                        )
+                    is SettingsViewModel.SettingsEvent.ThemeSelected -> {
+                        currentTheme = event.themeStyle
+                        coreViewModel.getTheme()
                     }
                 }
             }
         }
-    }
 
-    @Composable
-    private fun LanguageSelectorRow(
-        modifier: Modifier = Modifier,
-        currentLanguage: Language,
-        onLanguageSelected: (Language) -> Unit
-    ) {
-        var expanded by remember { mutableStateOf(false) }
-        val languages = Language.entries.toList()
+        LaunchedEffect(uiState.error) {
+            uiState.error?.let { error ->
+                snackbarHostState.showSnackbar(message = error)
+            }
+        }
 
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .clickable { expanded = true }
-                .padding(horizontal = LargeSpacing, vertical = MediumSpacing),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(Res.string.language),
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
-            )
-
-            Box {
-                Text(
-                    text = currentLanguage.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.9f)
-                )
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.tertiary)
-                ) {
-                    languages.forEach { language ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = language.name,
-                                    color = if (language == currentLanguage) MaterialTheme.colorScheme.primary else Color.Unspecified
-                                )
-                            },
-                            onClick = {
-                                expanded = false
-                                onLanguageSelected(language)
-                            }
+        key(recompositionKey) {
+            Scaffold(
+                snackbarHost = {
+                    SnackbarHost(hostState = snackbarHostState) { data: SnackbarData ->
+                        Snackbar(
+                            snackbarData = data,
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
                         )
+                    }
+                },
+                containerColor = Color.Transparent
+            ) {
+                GradientBox(
+                    modifier = Modifier.fillMaxSize(),
+                    colors = listOf(
+                        MaterialTheme.colorScheme.surfaceContainerHigh,
+                        MaterialTheme.colorScheme.surfaceContainerLow
+                    ),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(WindowInsets.safeContent.asPaddingValues()),
+                    ) {
+                        Spacer(Modifier.height(MediumSpacing))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(Res.string.back),
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.clickable { navigator.pop() }
+                            )
+                            Spacer(modifier = Modifier.width(MediumSpacing))
+                            Text(
+                                stringResource(Res.string.settings),
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp)
+                            )
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(Modifier.height(LargeSpacing))
+                            if (uiState.isLoading) {
+                                CircularProgressIndicator()
+                            } else {
+                                SelectorRow(
+                                    currentValue = currentLanguage,
+                                    title = stringResource(Res.string.language),
+                                    values = Language.entries,
+                                    onSelected = { language ->
+                                        viewModel.setPreferredLanguage(language.iso)
+                                    }
+                                )
+                                Spacer(Modifier.height(SmallSpacing))
+                                SelectorRow(
+                                    currentValue = currentTheme,
+                                    title = stringResource(Res.string.theme),
+                                    values = ThemeStyle.entries,
+                                    onSelected = { theme ->
+                                        viewModel.setPreferredTheme(theme.theme)
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }

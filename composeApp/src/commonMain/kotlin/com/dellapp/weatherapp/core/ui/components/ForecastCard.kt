@@ -52,7 +52,7 @@ fun ForecastCard(
                         language = language!!.iso
                     )
                 },
-                color = Color.White,
+                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.headlineMedium,
             )
 
@@ -77,7 +77,7 @@ fun ForecastCard(
 
             Text(
                 text = weatherInfo.getFormattedTemperature(),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

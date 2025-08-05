@@ -4,8 +4,8 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,7 +41,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
@@ -52,11 +51,10 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.dellapp.weatherapp.core.common.EndForecastGradientBg
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.Shapes
-import com.dellapp.weatherapp.core.common.StartForecastGradientBg
+import com.dellapp.weatherapp.core.common.ThemeStyle
 import com.dellapp.weatherapp.core.common.TinySpacing
 import com.dellapp.weatherapp.core.common.XLargeSpacing
 import com.dellapp.weatherapp.core.common.XXXLargeSpacing
@@ -82,6 +80,7 @@ import weatherapp.composeapp.generated.resources.add_city
 import weatherapp.composeapp.generated.resources.data_not_found
 import weatherapp.composeapp.generated.resources.location_permission_required
 import weatherapp.composeapp.generated.resources.main_background
+import weatherapp.composeapp.generated.resources.main_background_white
 import weatherapp.composeapp.generated.resources.open_settings
 import kotlin.math.roundToInt
 
@@ -94,6 +93,7 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val uiState by viewModel.uiState.collectAsState()
         val selectedLanguage by coreViewModel.selectedLanguage.collectAsState()
+        val selectedTheme by coreViewModel.selectedThemeStyle.collectAsState()
         val state by model.collectAsState()
         val scope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
@@ -142,9 +142,12 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                 val initialOffset = screenHeightPx - peekHeight
                 val offsetY = remember { Animatable(initialOffset) }
                 val coroutineScope = rememberCoroutineScope()
+                val isSystemDark = isSystemInDarkTheme()
+                val themeStyle = selectedTheme
+                    ?: (if (isSystemDark) ThemeStyle.Dark else ThemeStyle.Light)
 
                 Image(
-                    painter = painterResource(Res.drawable.main_background),
+                    painter = painterResource(if (selectedTheme == ThemeStyle.Dark) Res.drawable.main_background else Res.drawable.main_background_white),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds
@@ -165,7 +168,7 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                         } else if (uiState.error != null) {
                             Text(
                                 uiState.error ?: stringResource(Res.string.data_not_found),
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.primary,
                                 style = MaterialTheme.typography.headlineLarge
                             )
                         } else if (uiState.weather == null) {
@@ -176,7 +179,7 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                             ) {
                                 Text(
                                     text = stringResource(Res.string.add_city),
-                                    color = Color.White,
+                                    color = MaterialTheme.colorScheme.primary,
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.headlineLarge
                                 )
@@ -184,13 +187,13 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                         } else {
                             Text(
                                 text = uiState.weather?.cityName.orEmpty(),
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.primary,
                                 style = MaterialTheme.typography.headlineLarge
                             )
                             Text(
                                 text = uiState.weather?.currentWeather?.getTemperatureFormatted()
                                     .orEmpty(),
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.primary,
                                 style = MaterialTheme.typography.titleLarge
                             )
                             Text(
@@ -217,7 +220,10 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                 }
 
                 GradientBox(
-                    colors = listOf(StartForecastGradientBg, EndForecastGradientBg),
+                    colors = listOf(
+                        MaterialTheme.colorScheme.surfaceContainerHigh,
+                        MaterialTheme.colorScheme.surfaceContainerLow
+                    ),
                     gradientType = GradientType.LINEAR,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -272,8 +278,9 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                         })
                     },
                     onSettingsClick = {
-                        navigator.push(SettingsScreen(selectedLanguage))
+                        navigator.push(SettingsScreen(selectedLanguage, themeStyle))
                     },
+                    isDarkTheme = themeStyle == ThemeStyle.Dark,
                     onPositionClick = {
                         viewModel.onLocationUpdate(null)
                         model.currentLocation()
