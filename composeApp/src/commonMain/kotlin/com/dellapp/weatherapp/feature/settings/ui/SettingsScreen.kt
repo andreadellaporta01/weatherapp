@@ -1,6 +1,7 @@
 package com.dellapp.weatherapp.feature.settings.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,6 +40,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.dellapp.weatherapp.core.common.Language
 import com.dellapp.weatherapp.core.common.LargeSpacing
+import com.dellapp.weatherapp.core.common.Localization
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.SmallSpacing
 import com.dellapp.weatherapp.core.common.ThemeStyle
@@ -48,6 +49,7 @@ import com.dellapp.weatherapp.core.ui.components.GradientBox
 import com.dellapp.weatherapp.core.ui.components.SelectorRow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.getKoin
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.back
@@ -55,10 +57,7 @@ import weatherapp.composeapp.generated.resources.language
 import weatherapp.composeapp.generated.resources.settings
 import weatherapp.composeapp.generated.resources.theme
 
-class SettingsScreen(
-    private val selectedLanguage: Language,
-    private val selectedThemeStyle: ThemeStyle
-) : Screen {
+class SettingsScreen : Screen {
 
     @Composable
     override fun Content() {
@@ -66,21 +65,23 @@ class SettingsScreen(
         val viewModel: SettingsViewModel = koinViewModel()
         val navigator = LocalNavigator.currentOrThrow
         val uiState by viewModel.uiState.collectAsState()
-        var currentLanguage by remember { mutableStateOf(selectedLanguage) }
-        var currentTheme by remember { mutableStateOf(selectedThemeStyle) }
+        val selectedLanguage by coreViewModel.selectedLanguage.collectAsState()
+        val selectedTheme by coreViewModel.selectedThemeStyle.collectAsState()
+        val isSystemDark = isSystemInDarkTheme()
+        val themeStyle = selectedTheme
+            ?: (if (isSystemDark) ThemeStyle.Dark else ThemeStyle.Light)
         val snackbarHostState = remember { SnackbarHostState() }
-        val recompositionKey = remember(currentLanguage) { currentLanguage.iso }
+        val localization = koinInject<Localization>()
 
         LaunchedEffect(Unit) {
             viewModel.events.collect { event ->
                 when (event) {
                     is SettingsViewModel.SettingsEvent.LanguageSelected -> {
-                        currentLanguage = event.language
+                        localization.applyLanguage(event.language.iso)
                         coreViewModel.getLanguage()
                     }
 
                     is SettingsViewModel.SettingsEvent.ThemeSelected -> {
-                        currentTheme = event.themeStyle
                         coreViewModel.getTheme()
                     }
                 }
@@ -92,71 +93,68 @@ class SettingsScreen(
                 snackbarHostState.showSnackbar(message = error)
             }
         }
-
-        key(recompositionKey) {
-            Scaffold(
-                snackbarHost = {
-                    SnackbarHost(hostState = snackbarHostState) { data: SnackbarData ->
-                        Snackbar(
-                            snackbarData = data,
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) { data: SnackbarData ->
+                    Snackbar(
+                        snackbarData = data,
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
+            },
+            containerColor = Color.Transparent
+        ) {
+            GradientBox(
+                modifier = Modifier.fillMaxSize(),
+                colors = listOf(
+                    MaterialTheme.colorScheme.surfaceContainerHigh,
+                    MaterialTheme.colorScheme.surfaceContainerLow
+                ),
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(WindowInsets.safeContent.asPaddingValues()),
+                ) {
+                    Spacer(Modifier.height(MediumSpacing))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.back),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.clickable { navigator.pop() }
+                        )
+                        Spacer(modifier = Modifier.width(MediumSpacing))
+                        Text(
+                            stringResource(Res.string.settings),
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp)
                         )
                     }
-                },
-                containerColor = Color.Transparent
-            ) {
-                GradientBox(
-                    modifier = Modifier.fillMaxSize(),
-                    colors = listOf(
-                        MaterialTheme.colorScheme.surfaceContainerHigh,
-                        MaterialTheme.colorScheme.surfaceContainerLow
-                    ),
-                ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(WindowInsets.safeContent.asPaddingValues()),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Spacer(Modifier.height(MediumSpacing))
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(Res.string.back),
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.clickable { navigator.pop() }
+                        Spacer(Modifier.height(LargeSpacing))
+                        if (uiState.isLoading) {
+                            CircularProgressIndicator()
+                        } else {
+                            SelectorRow(
+                                currentValue = selectedLanguage,
+                                title = stringResource(Res.string.language),
+                                values = Language.entries,
+                                onSelected = { language ->
+                                    viewModel.setPreferredLanguage(language.iso)
+                                }
                             )
-                            Spacer(modifier = Modifier.width(MediumSpacing))
-                            Text(
-                                stringResource(Res.string.settings),
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp)
+                            Spacer(Modifier.height(SmallSpacing))
+                            SelectorRow(
+                                currentValue = themeStyle,
+                                title = stringResource(Res.string.theme),
+                                values = ThemeStyle.entries,
+                                onSelected = { theme ->
+                                    viewModel.setPreferredTheme(theme.theme)
+                                }
                             )
-                        }
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Spacer(Modifier.height(LargeSpacing))
-                            if (uiState.isLoading) {
-                                CircularProgressIndicator()
-                            } else {
-                                SelectorRow(
-                                    currentValue = currentLanguage,
-                                    title = stringResource(Res.string.language),
-                                    values = Language.entries,
-                                    onSelected = { language ->
-                                        viewModel.setPreferredLanguage(language.iso)
-                                    }
-                                )
-                                Spacer(Modifier.height(SmallSpacing))
-                                SelectorRow(
-                                    currentValue = currentTheme,
-                                    title = stringResource(Res.string.theme),
-                                    values = ThemeStyle.entries,
-                                    onSelected = { theme ->
-                                        viewModel.setPreferredTheme(theme.theme)
-                                    }
-                                )
-                            }
                         }
                     }
                 }

@@ -27,8 +27,8 @@ import com.dellapp.weatherapp.feature.settings.domain.di.settingsDomainModule
 import com.dellapp.weatherapp.feature.settings.ui.di.settingsPresentationModule
 import com.dellapp.weatherapp.feature.splash.ui.SplashScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -37,19 +37,15 @@ import org.koin.dsl.module
 @Composable
 @Preview
 fun App() {
-    val coreViewModel: CoreViewModel = koinViewModel()
-    val localization = koinInject<Localization>()
-    val selectedLanguage by coreViewModel.selectedLanguage.collectAsState()
+    val coreViewModel: CoreViewModel = getKoin().get()
     val selectedTheme by coreViewModel.selectedThemeStyle.collectAsState()
     val systemInDarkTheme = isSystemInDarkTheme()
     var isDarkTheme by remember { mutableStateOf(systemInDarkTheme) }
 
-    LaunchedEffect(selectedLanguage) {
-        localization.applyLanguage(selectedLanguage.iso)
-    }
-
     LaunchedEffect(selectedTheme) {
-        isDarkTheme = selectedTheme == ThemeStyle.Dark
+        if(selectedTheme != null) {
+            isDarkTheme = selectedTheme == ThemeStyle.Dark
+        }
     }
 
     Theme(

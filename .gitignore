@@ -86,3 +86,27 @@ logs/
 # Kotlin
 .kotlin/
 composeApp/preferences.properties
+
+# Xcode
+*.xcuserstate
+*.xcuserdatad/
+**/xcuserdata/
+*.xcworkspace/xcuserdata/
+**/xcuserdata/**/xcschememanagement.plist
+iosApp/iosApp.xcodeproj/xcuserdata
+
+# User-specific schemes
+*.xcscheme
+
+# Build products
+DerivedData/
+
+# Archives
+*.xcarchive
+
+# CocoaPods (se usi CocoaPods)
+Pods/
+*.xcworkspace
+
+# Swift Package Manager
+.swiftpm/

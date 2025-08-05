@@ -189,6 +189,22 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.dellapp.weatherapp"
             packageVersion = "1.0.0"
+
+            macOS {
+                iconFile.set(project.file("src/desktopMain/resources/icon.icns"))
+                bundleID = "com.dellapp.weatherapp"
+                signing {
+                    sign.set(false)
+                }
+            }
+
+            windows {
+                iconFile.set(project.file("src/desktopMain/resources/icon.ico"))
+            }
+
+            linux {
+                iconFile.set(project.file("src/desktopMain/resources/icon.png"))
+            }
         }
     }
 }

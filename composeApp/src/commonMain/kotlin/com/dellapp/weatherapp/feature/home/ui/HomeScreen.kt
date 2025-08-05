@@ -147,7 +147,7 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                     ?: (if (isSystemDark) ThemeStyle.Dark else ThemeStyle.Light)
 
                 Image(
-                    painter = painterResource(if (selectedTheme == ThemeStyle.Dark) Res.drawable.main_background else Res.drawable.main_background_white),
+                    painter = painterResource(if (themeStyle == ThemeStyle.Dark) Res.drawable.main_background else Res.drawable.main_background_white),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds
@@ -254,7 +254,7 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                             )
                         }
                 ) {
-                    if (offsetY.value < screenHeightPx * 0.3f) {
+                    if (offsetY.value < screenHeightPx * 0.3f && uiState.weather != null) {
                         WeatherDetail(uiState.weather, selectedLanguage)
                     } else {
                         ForecastListCard(
@@ -278,7 +278,7 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                         })
                     },
                     onSettingsClick = {
-                        navigator.push(SettingsScreen(selectedLanguage, themeStyle))
+                        navigator.push(SettingsScreen())
                     },
                     isDarkTheme = themeStyle == ThemeStyle.Dark,
                     onPositionClick = {
