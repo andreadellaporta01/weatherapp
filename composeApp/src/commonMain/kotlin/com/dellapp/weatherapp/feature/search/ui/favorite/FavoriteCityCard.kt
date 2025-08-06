@@ -1,7 +1,7 @@
 package com.dellapp.weatherapp.feature.search.ui.favorite
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,15 +33,16 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
+import com.dellapp.weatherapp.core.common.ThemeStyle
 import com.dellapp.weatherapp.core.common.TinySpacing
 import com.dellapp.weatherapp.core.common.XXLargeSpacing
 import com.dellapp.weatherapp.core.domain.model.City
+import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.components.WeatherIcon
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 import weatherapp.composeapp.generated.resources.Res
-import weatherapp.composeapp.generated.resources.bg_weather_card
 import weatherapp.composeapp.generated.resources.favorite_city_card_high_temp
 import weatherapp.composeapp.generated.resources.favorite_city_card_low_temp
 import weatherapp.composeapp.generated.resources.refresh
@@ -52,7 +53,11 @@ fun FavoriteCityCard(
     onCitySelected: (City) -> Unit,
     viewModel: FavoriteCityViewModel = koinViewModel(key = "${city.lat},${city.lon}")
 ) {
+    val coreViewModel: CoreViewModel = getKoin().get()
     val uiState by viewModel.uiState.collectAsState()
+    val isSystemDark = isSystemInDarkTheme()
+    val themeStyle = coreViewModel.selectedThemeStyle.value
+        ?: (if (isSystemDark) ThemeStyle.Dark else ThemeStyle.Light)
 
     LaunchedEffect(Unit) {
         viewModel.getCurrentWeather(city)
@@ -71,7 +76,13 @@ fun FavoriteCityCard(
             modifier = Modifier.heightIn(min = 184.dp)
         ) {
             AsyncImage(
-                model = Res.getUri("drawable/bg_weather_card.svg"),
+                model = if (themeStyle == ThemeStyle.Dark) {
+                    Res.getUri("drawable/bg_weather_card_dark.svg")
+                } else {
+                    Res.getUri(
+                        "drawable/bg_weather_card_light.svg"
+                    )
+                },
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxSize().align(Alignment.BottomStart)
@@ -112,13 +123,19 @@ fun FavoriteCityCard(
                         Spacer(modifier = Modifier.height(MediumSpacing))
                         Row {
                             Text(
-                                text = stringResource(Res.string.favorite_city_card_high_temp, uiState.weather?.currentWeather?.getMaxFormatted().orEmpty()),
+                                text = stringResource(
+                                    Res.string.favorite_city_card_high_temp,
+                                    uiState.weather?.currentWeather?.getMaxFormatted().orEmpty()
+                                ),
                                 color = MaterialTheme.colorScheme.secondary,
                                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp)
                             )
                             Spacer(modifier = Modifier.width(MediumSpacing))
                             Text(
-                                text = stringResource(Res.string.favorite_city_card_low_temp, uiState.weather?.currentWeather?.getMinFormatted().orEmpty()),
+                                text = stringResource(
+                                    Res.string.favorite_city_card_low_temp,
+                                    uiState.weather?.currentWeather?.getMinFormatted().orEmpty()
+                                ),
                                 color = MaterialTheme.colorScheme.secondary,
                                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp)
                             )

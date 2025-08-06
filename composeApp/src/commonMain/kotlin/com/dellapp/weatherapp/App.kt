@@ -12,7 +12,6 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.dellapp.weatherapp.core.common.AppDataStore
 import com.dellapp.weatherapp.core.common.AppDataStoreManager
 import com.dellapp.weatherapp.core.common.Context
-import com.dellapp.weatherapp.core.common.Localization
 import com.dellapp.weatherapp.core.common.Theme
 import com.dellapp.weatherapp.core.common.ThemeStyle
 import com.dellapp.weatherapp.core.data.di.coreDataModule
@@ -28,7 +27,6 @@ import com.dellapp.weatherapp.feature.settings.ui.di.settingsPresentationModule
 import com.dellapp.weatherapp.feature.splash.ui.SplashScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.getKoin
-import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration

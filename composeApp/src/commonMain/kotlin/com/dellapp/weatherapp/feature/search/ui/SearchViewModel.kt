@@ -26,10 +26,6 @@ class SearchViewModel(
     private val _events = MutableSharedFlow<SearchEvent>()
     val events = _events.asSharedFlow()
 
-    init {
-        getPreferredCities()
-    }
-
     fun searchCity(query: String) = viewModelScope.launch {
         _uiState.update { it.copy(isSuggestionLoading = true) }
         searchCitiesUseCase(query)

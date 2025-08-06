@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -30,7 +31,7 @@ fun SearchBar(
 ) {
     Box(
         modifier = modifier
-            .background(color = SearchFieldColor, shape = Shapes.medium)
+            .background(color = MaterialTheme.colorScheme.surfaceContainer, shape = Shapes.medium)
             .clip(Shapes.medium)
     ) {
         TextField(
@@ -41,24 +42,24 @@ fun SearchBar(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    tint = Color.LightGray
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             },
             singleLine = true,
             colors = TextFieldDefaults.colors(
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                disabledTextColor = Color.Gray,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                disabledTextColor = MaterialTheme.colorScheme.secondary,
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
-                cursorColor = Color.White,
+                cursorColor = MaterialTheme.colorScheme.primary,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedPlaceholderColor = Color.LightGray,
-                unfocusedPlaceholderColor = Color.LightGray,
-                focusedLeadingIconColor = Color.LightGray,
-                unfocusedLeadingIconColor = Color.LightGray
+                focusedPlaceholderColor = MaterialTheme.colorScheme.secondary,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.secondary,
+                focusedLeadingIconColor = MaterialTheme.colorScheme.secondary,
+                unfocusedLeadingIconColor = MaterialTheme.colorScheme.secondary,
             ),
             modifier = Modifier.fillMaxWidth()
         )

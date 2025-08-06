@@ -36,7 +36,7 @@ fun BottomBar(
             model = Res.getUri(if (isDarkTheme) "drawable/bottom_bar_dark.svg" else "drawable/bottom_bar_light.svg"),
             contentDescription = null,
             modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
-            contentScale = ContentScale.FillHeight
+            contentScale = ContentScale.FillBounds
         )
         AsyncImage(
             model = Res.getUri(if (isDarkTheme) "drawable/add_bottom_dark.svg" else "drawable/add_bottom_light.svg"),

@@ -42,11 +42,9 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.dellapp.weatherapp.core.common.EndGradientBg
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.SmallSpacing
-import com.dellapp.weatherapp.core.common.StartGradientBg
 import com.dellapp.weatherapp.core.common.XLargeSpacing
 import com.dellapp.weatherapp.core.ui.components.GradientBox
 import com.dellapp.weatherapp.core.ui.components.SearchBar
@@ -71,6 +69,10 @@ class SearchScreen(
         var searchText by remember { mutableStateOf("") }
         var showSuggestions by remember { mutableStateOf(false) }
 
+        LaunchedEffect(Unit) {
+            viewModel.getPreferredCities()
+        }
+
         LaunchedEffect(searchText) {
             if (searchText.length >= 3) {
                 viewModel.searchCity(searchText)
@@ -90,7 +92,10 @@ class SearchScreen(
 
         GradientBox(
             modifier = Modifier.fillMaxSize(),
-            colors = listOf(StartGradientBg, EndGradientBg),
+            colors = listOf(
+                MaterialTheme.colorScheme.surfaceContainerHigh,
+                MaterialTheme.colorScheme.surfaceContainerLow
+            ),
         ) {
             Column(
                 modifier = Modifier
@@ -105,13 +110,13 @@ class SearchScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(Res.string.back),
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable { navigator.pop() }
                     )
                     Spacer(modifier = Modifier.width(MediumSpacing))
                     Text(
                         stringResource(Res.string.weather),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp)
                     )
                 }
@@ -123,11 +128,11 @@ class SearchScreen(
                         showSuggestions = it.length >= 3
                     },
                 )
-                Spacer(Modifier.height(SmallSpacing))
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = MediumSpacing).verticalScroll(rememberScrollState()),
+                        .padding(horizontal = MediumSpacing, vertical = MediumSpacing)
+                        .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(XLargeSpacing)
                 ) {
                     if (showSuggestions) {
@@ -136,7 +141,7 @@ class SearchScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                CircularProgressIndicator(color = Color.White)
+                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                             }
                         } else if (uiState.cities.isNullOrEmpty()) {
                             Box(
@@ -145,7 +150,7 @@ class SearchScreen(
                             ) {
                                 Text(
                                     text = stringResource(Res.string.city_not_found),
-                                    color = Color.White,
+                                    color = MaterialTheme.colorScheme.primary,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                             }
@@ -183,7 +188,7 @@ class SearchScreen(
                                         Icon(
                                             imageVector = Icons.Default.Delete,
                                             contentDescription = stringResource(Res.string.delete),
-                                            tint = Color.White
+                                            tint = MaterialTheme.colorScheme.primary
                                         )
                                     }
                                 }
@@ -211,7 +216,7 @@ class SearchScreen(
                 .clickable { onClick(text) }
                 .padding(vertical = SmallSpacing, horizontal = MediumSpacing)
         ) {
-            Text(text = text, color = Color.White)
+            Text(text = text, color = MaterialTheme.colorScheme.primary)
         }
     }
 }

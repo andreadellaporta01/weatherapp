@@ -61,7 +61,7 @@ fun ForecastListCard(
             Box(modifier = Modifier.align(Alignment.Center).padding(MediumSpacing)) {
                 Text(
                     text = stringResource(Res.string.add_city_forecast),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium
                 )

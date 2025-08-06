@@ -36,7 +36,7 @@ fun ForecastCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.2f),
         ),
-        border = BorderStroke(width = 1.dp, color = Color.White.copy(alpha = 0.2f)),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
         elevation = CardDefaults.cardElevation(8.dp),
     ) {
         Column(
