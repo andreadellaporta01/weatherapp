@@ -16,6 +16,34 @@ This project is built with Compose Multiplatform, allowing it to run on Android,
 *   **Theme Selection:** Choose between light and dark themes.
 *   **Cross-Platform:** Runs on Android, iOS, Desktop, and Web.
 
+## Screenshots
+
+Here are some glimpses of WeatherApp in action:
+
+![Home screen with weather forecast (Dark Theme)](screenshots/home_dark.png)
+_Home screen with weather forecast (Dark Theme)_
+
+![Home screen with weather forecast (Light Theme)](screenshots/home_light.png)
+_Home screen with weather forecast (Light Theme)_
+
+![Detailed current weather view (Dark Theme)](screenshots/current_weather_dark.png)
+_Detailed current weather view (Dark Theme)_
+
+![Detailed current weather view (Light Theme)](screenshots/current_weather_light.png)
+_Detailed current weather view (Light Theme)_
+
+![Favorite cities list (Dark Theme)](screenshots/favorites_dark.png)
+_Favorite cities list (Dark Theme)_
+
+![Favorite cities list (Light Theme)](screenshots/favorites_light.png)
+_Favorite cities list (Light Theme)_
+
+![Settings screen for theme and language selection (Dark Theme)](screenshots/settings_dark.png)
+_Settings screen for theme and language selection (Dark Theme)_
+
+![Settings screen for theme and language selection (Light Theme)](screenshots/settings_light.png)
+_Settings screen for theme and language selection (Light Theme)_
+
 ## Platforms
 
 *   Android
@@ -54,10 +82,10 @@ This project is built with Compose Multiplatform, allowing it to run on Android,
     *   Create a `local.properties` file in the root directory of the project (`/Users/andreadellaporta/WeatherApp/local.properties`).
     *   Add your API key to this file:
         
-```properties
+\'\'\'properties
         API_KEY=YOUR_OPENWEATHERMAP_API_KEY
-```
-        This key will be automatically picked up by the build process.
+\'\'\'
+This key will be automatically picked up by the build process.
 
 ### Building and Running
 
@@ -68,15 +96,15 @@ This project is built with Compose Multiplatform, allowing it to run on Android,
     *   Select your target device and run.
 *   **Desktop:**
     Run the Gradle task `:composeApp:run` in Android Studio or from the command line:
-```bash
+\'\'\'bash
     ./gradlew :composeApp:run
-```
+\'\'\'
     Native distributions (dmg, msi, deb) can be built using tasks like `:composeApp:packageDmg`, `:composeApp:packageMsi`, or `:composeApp:packageDeb`.
 *   **Web (WasmJs):**
     Run the Gradle task `:composeApp:wasmJsBrowserDevelopmentRun` in Android Studio or from the command line:
-```bash
+\'\'\'bash
     ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
-```
+\'\'\'
     This will start a development server. Open the URL provided in the console (usually `http://localhost:8080`) in your browser.
 
 ## Project Structure
@@ -102,9 +130,13 @@ The project includes a custom Gradle task `generateDrawableMap` (defined in `com
 This setup simplifies the management of shared drawable resources and provides a convenient way to reference them in code.
 
 ## Feedback and Contributions
+
+We would appreciate your feedback, especially on Compose for Web (WasmJs).
+*   Join the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web) for discussions.
+*   If you encounter any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+
 Contributions are welcome! Please feel free to submit a pull request or open an issue.
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
-

@@ -75,7 +75,7 @@ fun FavoriteCityCard(
         ),
     ) {
         Box(
-            modifier = Modifier.heightIn(min = 184.dp, max = 300.dp)
+            modifier = Modifier.height(height = 184.dp)
         ) {
             SvgImage(
                 image = if (themeStyle == ThemeStyle.Dark) {
