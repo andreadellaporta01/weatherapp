@@ -3,8 +3,8 @@ package com.dellapp.weatherapp.feature.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dellapp.weatherapp.core.domain.model.City
-import com.dellapp.weatherapp.feature.home.domain.GetLastFavoriteCityUseCase
 import com.dellapp.weatherapp.core.domain.usecase.GetWeatherByLocationUseCase
+import com.dellapp.weatherapp.feature.home.domain.GetLastFavoriteCityUseCase
 import dev.jordond.compass.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

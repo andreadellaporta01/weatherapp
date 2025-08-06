@@ -1,6 +1,11 @@
 package com.dellapp.weatherapp.core.common
 
 import LocalNames
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.runtime.Composable
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -83,3 +88,13 @@ fun mpsToKmh(mps: Double): Double {
     return (kmh * 10).roundToInt() / 10.0
 }
 
+expect fun getCurrentPlatform(): Platform
+
+@Composable
+fun getScreenPaddingValues() : PaddingValues {
+    return if(getCurrentPlatform() == Platform.Android || getCurrentPlatform() == Platform.iOS) {
+        WindowInsets.safeContent.asPaddingValues()
+    } else {
+        PaddingValues(vertical = MediumSpacing, horizontal = LargeSpacing)
+    }
+}

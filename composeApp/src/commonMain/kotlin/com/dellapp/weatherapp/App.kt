@@ -9,9 +9,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.Navigator
+import coil3.ImageLoader
+import coil3.compose.LocalPlatformContext
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.svg.SvgDecoder
 import com.dellapp.weatherapp.core.common.AppDataStore
 import com.dellapp.weatherapp.core.common.AppDataStoreManager
 import com.dellapp.weatherapp.core.common.Context
+import com.dellapp.weatherapp.core.common.Localization
 import com.dellapp.weatherapp.core.common.Theme
 import com.dellapp.weatherapp.core.common.ThemeStyle
 import com.dellapp.weatherapp.core.data.di.coreDataModule
@@ -27,6 +32,7 @@ import com.dellapp.weatherapp.feature.settings.ui.di.settingsPresentationModule
 import com.dellapp.weatherapp.feature.splash.ui.SplashScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.getKoin
+import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -39,11 +45,27 @@ fun App() {
     val selectedTheme by coreViewModel.selectedThemeStyle.collectAsState()
     val systemInDarkTheme = isSystemInDarkTheme()
     var isDarkTheme by remember { mutableStateOf(systemInDarkTheme) }
+    val platformContext = LocalPlatformContext.current
+    val selectedLanguage by coreViewModel.selectedLanguage.collectAsState()
+    val localization = koinInject<Localization>()
 
     LaunchedEffect(selectedTheme) {
         if(selectedTheme != null) {
             isDarkTheme = selectedTheme == ThemeStyle.Dark
         }
+    }
+
+    LaunchedEffect(selectedLanguage) {
+        print(selectedLanguage.iso)
+        localization.applyLanguage(selectedLanguage.iso)
+    }
+
+    setSingletonImageLoaderFactory {
+        ImageLoader.Builder(platformContext)
+            .components {
+                add(SvgDecoder.Factory())
+            }
+            .build()
     }
 
     Theme(

@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.ThemeStyle
@@ -38,10 +37,13 @@ import com.dellapp.weatherapp.core.common.TinySpacing
 import com.dellapp.weatherapp.core.common.XXLargeSpacing
 import com.dellapp.weatherapp.core.domain.model.City
 import com.dellapp.weatherapp.core.ui.CoreViewModel
+import com.dellapp.weatherapp.core.ui.components.SvgImage
 import com.dellapp.weatherapp.core.ui.components.WeatherIcon
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
+import weatherapp.composeapp.generated.bgWeatherCardDark
+import weatherapp.composeapp.generated.bgWeatherCardLight
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.favorite_city_card_high_temp
 import weatherapp.composeapp.generated.resources.favorite_city_card_low_temp
@@ -73,23 +75,21 @@ fun FavoriteCityCard(
         ),
     ) {
         Box(
-            modifier = Modifier.heightIn(min = 184.dp)
+            modifier = Modifier.heightIn(min = 184.dp, max = 300.dp)
         ) {
-            AsyncImage(
-                model = if (themeStyle == ThemeStyle.Dark) {
-                    Res.getUri("drawable/bg_weather_card_dark.svg")
+            SvgImage(
+                image = if (themeStyle == ThemeStyle.Dark) {
+                    bgWeatherCardDark
                 } else {
-                    Res.getUri(
-                        "drawable/bg_weather_card_light.svg"
-                    )
+                    bgWeatherCardLight
                 },
                 contentDescription = null,
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier.fillMaxSize().align(Alignment.BottomStart)
             )
             Box(
                 modifier = Modifier.matchParentSize()
-                    .padding(horizontal = LargeSpacing, vertical = MediumSpacing)
+                    .padding(start = LargeSpacing, end = LargeSpacing, bottom = LargeSpacing)
             ) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

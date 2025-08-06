@@ -4,10 +4,14 @@ import java.io.File
 import java.util.Properties
 
 
-private val file = File("preferences.properties")
+private val preferencesDir = File(System.getProperty("user.home"), ".weatherapp").apply { mkdirs() }
+private val file = File(preferencesDir, "preferences.properties")
 private val properties = Properties()
 
 actual suspend fun Context?.getData(key: String): String? {
+    if (file.exists()) {
+        file.inputStream().use { properties.load(it) }
+    }
     return properties.getProperty(key)
 }
 

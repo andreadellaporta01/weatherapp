@@ -1,25 +1,19 @@
 package com.dellapp.weatherapp.core.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,29 +26,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dellapp.weatherapp.core.common.CardBorderColor
-import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.Shapes
 import com.dellapp.weatherapp.core.common.SmallSpacing
 import com.dellapp.weatherapp.core.common.TinySpacing
 import com.dellapp.weatherapp.core.common.XLargeSpacing
 import com.dellapp.weatherapp.core.common.mpsToKmh
-import dev.jordond.compass.Speed
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import weatherapp.composeapp.generated.icWind
+import weatherapp.composeapp.generated.icWindArrow
 import weatherapp.composeapp.generated.resources.Res
-import weatherapp.composeapp.generated.resources.high
-import weatherapp.composeapp.generated.resources.ic_sun_brightness
-import weatherapp.composeapp.generated.resources.ic_wind
-import weatherapp.composeapp.generated.resources.ic_wind_arrow
-import weatherapp.composeapp.generated.resources.low
-import weatherapp.composeapp.generated.resources.moderate
-import weatherapp.composeapp.generated.resources.unknown
-import weatherapp.composeapp.generated.resources.uv_index
-import weatherapp.composeapp.generated.resources.very_high
 import weatherapp.composeapp.generated.resources.wind
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
 @Composable
 fun WindCard(
@@ -80,10 +61,10 @@ fun WindCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_wind),
+                SvgImage(
+                    image = icWind,
                     modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.secondary,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
                     contentDescription = null
                 )
                 Spacer(Modifier.width(TinySpacing))
@@ -98,8 +79,8 @@ fun WindCard(
                 modifier = modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(Res.drawable.wind),
+                SvgImage(
+                    image = weatherapp.composeapp.generated.wind,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                     modifier = Modifier.size(120.dp),
                     contentDescription = null
@@ -110,10 +91,10 @@ fun WindCard(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelSmall
                 )
-                Icon(
-                    painter = painterResource(Res.drawable.ic_wind_arrow),
+                SvgImage(
+                    image = icWindArrow,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .size(120.dp)
                         .rotate(windAngle.toFloat())

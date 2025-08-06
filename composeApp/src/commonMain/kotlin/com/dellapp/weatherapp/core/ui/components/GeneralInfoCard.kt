@@ -11,14 +11,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dellapp.weatherapp.core.common.CardBorderColor
@@ -29,7 +28,7 @@ import com.dellapp.weatherapp.core.common.XLargeSpacing
 
 @Composable
 fun GeneralInfoCard(
-    iconPainter: Painter,
+    icon: String,
     name: String,
     title: String,
     description: String? = null,
@@ -53,9 +52,9 @@ fun GeneralInfoCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = iconPainter,
-                    tint = MaterialTheme.colorScheme.secondary,
+                SvgImage(
+                    image = icon,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
                     modifier = Modifier.size(24.dp),
                     contentDescription = null
                 )

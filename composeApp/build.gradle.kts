@@ -47,6 +47,7 @@ kotlin {
                         // Serve sources to debug inside browser
                         add(rootDirPath)
                         add(projectDirPath)
+                        add("$projectDirPath/src/commonMain/composeResources")
                     }
                 }
             }
@@ -208,3 +209,79 @@ compose.desktop {
         }
     }
 }
+
+abstract class GenerateDrawableMap : DefaultTask() {
+
+    @get:InputDirectory
+    abstract val drawableDir: DirectoryProperty
+
+    @get:OutputFile
+    abstract val outputFile: RegularFileProperty
+
+    @TaskAction
+    fun generate() {
+        val packageName = "weatherapp.composeapp.generated.resources"
+        val generatedPackageName = "weatherapp.composeapp.generated"
+
+        val files = drawableDir.get().asFile.listFiles { f ->
+            f.isFile && f.name.endsWith(".svg")
+        } ?: emptyArray()
+
+        val imports = files.joinToString("\n") { file ->
+            val name = file.nameWithoutExtension
+            "import $packageName.$name"
+        }
+
+        val entries = files.joinToString(",\n") { file ->
+            val name = file.nameWithoutExtension
+            "    \"$name\" to Res.drawable.$name"
+        }
+
+        val stringVals = files.joinToString("\n") { file ->
+            val name = file.nameWithoutExtension
+            val camelName = toCamelCase(name)
+            "val $camelName = \"$name\""
+        }
+
+        val content = """
+            |// AUTO-GENERATED FILE. DO NOT EDIT.
+            |package $generatedPackageName
+            |
+            |import org.jetbrains.compose.resources.DrawableResource
+            |import $packageName.Res
+            |$imports
+            |
+            |$stringVals
+            |
+            |val drawableMap: Map<String, DrawableResource> = mapOf(
+            |$entries
+            |)
+        """.trimMargin()
+
+        val file = outputFile.get().asFile
+        file.parentFile.mkdirs()
+        file.writeText(content)
+    }
+
+    private fun toCamelCase(input: String): String {
+        return input.split("_", "-", " ")
+            .filter { it.isNotBlank() }
+            .joinToString("") { it.replaceFirstChar(Char::uppercaseChar) }
+            .replaceFirstChar(Char::lowercaseChar)
+    }
+}
+
+val generateDrawableMap by tasks.registering(GenerateDrawableMap::class) {
+    drawableDir.set(layout.projectDirectory.dir("src/commonMain/composeResources/drawable"))
+    outputFile.set(layout.buildDirectory.file("generated/drawablemap/GeneratedDrawableMap.kt"))
+}
+
+kotlin.sourceSets.named("commonMain") {
+    kotlin.srcDir(generateDrawableMap.map { it.outputFile.get().asFile.parentFile })
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    dependsOn(generateDrawableMap)
+}
+
+

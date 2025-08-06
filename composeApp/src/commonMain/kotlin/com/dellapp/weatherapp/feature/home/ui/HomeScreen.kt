@@ -3,7 +3,6 @@ package com.dellapp.weatherapp.feature.home.ui
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -12,17 +11,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,8 +39,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
@@ -58,7 +52,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.Shapes
-import com.dellapp.weatherapp.core.common.SmallSpacing
 import com.dellapp.weatherapp.core.common.ThemeStyle
 import com.dellapp.weatherapp.core.common.TinySpacing
 import com.dellapp.weatherapp.core.common.XLargeSpacing
@@ -66,11 +59,13 @@ import com.dellapp.weatherapp.core.common.XXXLargeSpacing
 import com.dellapp.weatherapp.core.common.geolocation.GeolocationModel
 import com.dellapp.weatherapp.core.common.geolocation.canShowAppSettings
 import com.dellapp.weatherapp.core.common.geolocation.showAppSettings
+import com.dellapp.weatherapp.core.common.getScreenPaddingValues
 import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.components.BottomBar
 import com.dellapp.weatherapp.core.ui.components.ForecastListCard
 import com.dellapp.weatherapp.core.ui.components.GradientBox
 import com.dellapp.weatherapp.core.ui.components.GradientType
+import com.dellapp.weatherapp.core.ui.components.SvgImage
 import com.dellapp.weatherapp.core.ui.components.WeatherDetail
 import com.dellapp.weatherapp.feature.search.ui.SearchScreen
 import com.dellapp.weatherapp.feature.settings.ui.SettingsScreen
@@ -80,12 +75,13 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
+import weatherapp.composeapp.generated.mainBackgroundDark
+import weatherapp.composeapp.generated.mainBackgroundLight
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.add_city
 import weatherapp.composeapp.generated.resources.data_not_found
+import weatherapp.composeapp.generated.resources.ic_home
 import weatherapp.composeapp.generated.resources.location_permission_required
-import weatherapp.composeapp.generated.resources.main_background
-import weatherapp.composeapp.generated.resources.main_background_white
 import weatherapp.composeapp.generated.resources.open_settings
 import kotlin.math.roundToInt
 
@@ -150,20 +146,33 @@ class HomeScreen(private val model: GeolocationModel) : Screen {
                 val isSystemDark = isSystemInDarkTheme()
                 val themeStyle = selectedTheme
                     ?: (if (isSystemDark) ThemeStyle.Dark else ThemeStyle.Light)
+                val isDarkTheme = themeStyle == ThemeStyle.Dark
 
-                Image(
-                    painter = painterResource(if (themeStyle == ThemeStyle.Dark) Res.drawable.main_background else Res.drawable.main_background_white),
+                SvgImage(
+                    image = if(isDarkTheme) mainBackgroundDark else mainBackgroundLight,
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.Crop
                 )
+
+                if (isDarkTheme) {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_home),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(bottom = 200.dp)
+                            .size(300.dp)
+                            .align(alignment = Alignment.BottomCenter),
+                        contentScale = ContentScale.Fit
+                    )
+                }
 
                 PullToRefreshBox(
                     isRefreshing = uiState.isLoading,
                     onRefresh = viewModel::getPreferredCity
                 ) {
                     Column(
-                        modifier = Modifier.padding(WindowInsets.safeContent.asPaddingValues())
+                        modifier = Modifier.padding(getScreenPaddingValues())
                             .fillMaxWidth().verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

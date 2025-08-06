@@ -6,13 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -36,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
@@ -46,6 +42,7 @@ import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.MediumSpacing
 import com.dellapp.weatherapp.core.common.SmallSpacing
 import com.dellapp.weatherapp.core.common.XLargeSpacing
+import com.dellapp.weatherapp.core.common.getScreenPaddingValues
 import com.dellapp.weatherapp.core.ui.components.GradientBox
 import com.dellapp.weatherapp.core.ui.components.SearchBar
 import com.dellapp.weatherapp.feature.search.ui.favorite.FavoriteCityCard
@@ -100,7 +97,7 @@ class SearchScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(WindowInsets.safeContent.asPaddingValues())
+                    .padding(getScreenPaddingValues())
             ) {
                 Spacer(Modifier.height(MediumSpacing))
                 Row(

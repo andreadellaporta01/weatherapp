@@ -25,3 +25,10 @@ enum class ThemeStyle(val theme: String) {
             ThemeStyle.entries.firstOrNull { it.theme == theme } ?: Dark
     }
 }
+
+enum class Platform {
+    Android,
+    iOS,
+    WASM,
+    Desktop
+}

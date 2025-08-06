@@ -11,24 +11,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dellapp.weatherapp.core.common.CardBorderColor
 import com.dellapp.weatherapp.core.common.Shapes
 import com.dellapp.weatherapp.core.common.TinySpacing
 import com.dellapp.weatherapp.core.common.XLargeSpacing
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import weatherapp.composeapp.generated.icSunBrightness
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.high
-import weatherapp.composeapp.generated.resources.ic_sun_brightness
 import weatherapp.composeapp.generated.resources.low
 import weatherapp.composeapp.generated.resources.moderate
 import weatherapp.composeapp.generated.resources.unknown
@@ -66,9 +65,9 @@ fun UVCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_sun_brightness),
-                    tint = MaterialTheme.colorScheme.secondary,
+                SvgImage(
+                    image = icSunBrightness,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
                     modifier = Modifier.size(24.dp),
                     contentDescription = null
                 )

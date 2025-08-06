@@ -5,13 +5,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -28,9 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,8 +37,11 @@ import com.dellapp.weatherapp.core.common.Language
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.Localization
 import com.dellapp.weatherapp.core.common.MediumSpacing
+import com.dellapp.weatherapp.core.common.Platform
 import com.dellapp.weatherapp.core.common.SmallSpacing
 import com.dellapp.weatherapp.core.common.ThemeStyle
+import com.dellapp.weatherapp.core.common.getCurrentPlatform
+import com.dellapp.weatherapp.core.common.getScreenPaddingValues
 import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.core.ui.components.GradientBox
 import com.dellapp.weatherapp.core.ui.components.SelectorRow
@@ -114,7 +112,7 @@ class SettingsScreen : Screen {
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth()
-                        .padding(WindowInsets.safeContent.asPaddingValues()),
+                        .padding(getScreenPaddingValues()),
                 ) {
                     Spacer(Modifier.height(MediumSpacing))
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -138,15 +136,17 @@ class SettingsScreen : Screen {
                         if (uiState.isLoading) {
                             CircularProgressIndicator()
                         } else {
-                            SelectorRow(
-                                currentValue = selectedLanguage,
-                                title = stringResource(Res.string.language),
-                                values = Language.entries,
-                                onSelected = { language ->
-                                    viewModel.setPreferredLanguage(language.iso)
-                                }
-                            )
-                            Spacer(Modifier.height(SmallSpacing))
+                            if (getCurrentPlatform() != Platform.WASM) {
+                                SelectorRow(
+                                    currentValue = selectedLanguage,
+                                    title = stringResource(Res.string.language),
+                                    values = Language.entries,
+                                    onSelected = { language ->
+                                        viewModel.setPreferredLanguage(language.iso)
+                                    }
+                                )
+                                Spacer(Modifier.height(SmallSpacing))
+                            }
                             SelectorRow(
                                 currentValue = themeStyle,
                                 title = stringResource(Res.string.theme),

@@ -14,11 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.dellapp.weatherapp.core.common.BottomBarHeight
 import com.dellapp.weatherapp.core.common.LargeSpacing
 import com.dellapp.weatherapp.core.common.XXLargeSpacing
 import org.jetbrains.compose.resources.stringResource
+import weatherapp.composeapp.generated.addBottomDark
+import weatherapp.composeapp.generated.addBottomLight
+import weatherapp.composeapp.generated.bottomBarDark
+import weatherapp.composeapp.generated.bottomBarLight
+import weatherapp.composeapp.generated.icPin
+import weatherapp.composeapp.generated.icSettings
 import weatherapp.composeapp.generated.resources.Res
 import weatherapp.composeapp.generated.resources.current_position
 import weatherapp.composeapp.generated.resources.settings
@@ -32,22 +37,22 @@ fun BottomBar(
     onPositionClick: () -> Unit = {},
 ) {
     Box(modifier = modifier.height(BottomBarHeight)) {
-        AsyncImage(
-            model = Res.getUri(if (isDarkTheme) "drawable/bottom_bar_dark.svg" else "drawable/bottom_bar_light.svg"),
+        SvgImage(
+            image = if (isDarkTheme) bottomBarDark else bottomBarLight,
             contentDescription = null,
             modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.FillBounds,
         )
-        AsyncImage(
-            model = Res.getUri(if (isDarkTheme) "drawable/add_bottom_dark.svg" else "drawable/add_bottom_light.svg"),
+        SvgImage(
+            image = if (isDarkTheme) addBottomDark else addBottomLight,
             contentDescription = null,
             contentScale = ContentScale.FillHeight,
             modifier = Modifier.align(Alignment.BottomCenter).fillMaxHeight().clickable {
                 onAddClick()
             },
         )
-        AsyncImage(
-            model = Res.getUri("drawable/ic_settings.svg"),
+        SvgImage(
+            image = icSettings,
             contentDescription = stringResource(Res.string.settings),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
             modifier = Modifier.align(Alignment.CenterEnd)
@@ -55,8 +60,8 @@ fun BottomBar(
                     onSettingsClick()
                 },
         )
-        AsyncImage(
-            model = Res.getUri("drawable/ic_pin.svg"),
+        SvgImage(
+            image = icPin,
             contentDescription = stringResource(Res.string.current_position),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
             modifier = Modifier.align(Alignment.CenterStart)

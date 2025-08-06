@@ -1,20 +1,20 @@
 package com.dellapp.weatherapp.core.common
 
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.Font
 import weatherapp.composeapp.generated.resources.Res
-import weatherapp.composeapp.generated.resources.SF_Pro_Text_Bold
-import weatherapp.composeapp.generated.resources.SF_Pro_Text_Regular
-import weatherapp.composeapp.generated.resources.SF_Pro_Text_Semibold
-import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
 import weatherapp.composeapp.generated.resources.SF_Pro_Display_Regular
 import weatherapp.composeapp.generated.resources.SF_Pro_Display_Semibold
 import weatherapp.composeapp.generated.resources.SF_Pro_Display_Thin
+import weatherapp.composeapp.generated.resources.SF_Pro_Text_Bold
 import weatherapp.composeapp.generated.resources.SF_Pro_Text_Medium
+import weatherapp.composeapp.generated.resources.SF_Pro_Text_Regular
+import weatherapp.composeapp.generated.resources.SF_Pro_Text_Semibold
 
 @Composable
 fun appTypography(): Typography {
