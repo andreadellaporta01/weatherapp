@@ -77,7 +77,7 @@ Thumbs.db
 
 # Local environment / secrets (you may adjust)
 .env
-local.properties
+composeApp/local.properties
 secrets.properties
 
 # Ktor / HTTP clients
@@ -110,3 +110,7 @@ Pods/
 
 # Swift Package Manager
 .swiftpm/
+
+# Secrets
+config/
+/local.properties
