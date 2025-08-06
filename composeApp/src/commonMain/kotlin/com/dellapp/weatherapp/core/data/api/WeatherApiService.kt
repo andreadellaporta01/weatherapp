@@ -3,6 +3,7 @@ package com.dellapp.weatherapp.core.data.api
 import CityDto
 import com.dellapp.weatherapp.core.data.dto.AirDto
 import com.dellapp.weatherapp.core.data.dto.WeatherDto
+import config.ApiConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -33,7 +34,7 @@ class WeatherApiService {
 
     private val baseUrl = "https://api.openweathermap.org/data"
     private val baseUrlGeo = "https://api.openweathermap.org/geo/1.0"
-    private val apiKey = "0c49d3c482fdd4b539ee199514fef912"
+    private val apiKey = ApiConfig.API_KEY
 
     suspend fun getCityCoordinates(
         city: String,

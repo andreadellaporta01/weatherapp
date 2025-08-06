@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -11,6 +12,12 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlin.serialization)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
 }
 
 kotlin {
@@ -282,6 +289,43 @@ kotlin.sourceSets.named("commonMain") {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     dependsOn(generateDrawableMap)
+}
+
+abstract class GenerateApiConfigTask : DefaultTask() {
+    @get:Input
+    abstract val apiKey: Property<String>
+
+    @get:OutputFile
+    abstract val outputFile: RegularFileProperty
+
+    @TaskAction
+    fun generate() {
+        outputFile.get().asFile.apply {
+            parentFile.mkdirs()
+            writeText("""
+                package config
+                
+                internal object ApiConfig {
+                    const val API_KEY = "${apiKey.get()}"
+                }
+            """.trimIndent())
+        }
+    }
+}
+
+val generateApiConfig = tasks.register<GenerateApiConfigTask>("generateApiConfig") {
+    apiKey.set(localProperties.getProperty("API_KEY", ""))
+    outputFile.set(layout.buildDirectory.file("generated/kotlin/config/ApiConfig.kt"))
+}
+
+val copyApiConfig = tasks.register<Copy>("copyApiConfig") {
+    dependsOn(generateApiConfig)
+    from(generateApiConfig.flatMap { it.outputFile })
+    into("src/commonMain/kotlin/config/")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    dependsOn(copyApiConfig)
 }
 
 
