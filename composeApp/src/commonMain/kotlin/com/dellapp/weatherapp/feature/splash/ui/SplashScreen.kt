@@ -19,6 +19,7 @@ import com.dellapp.weatherapp.core.common.geolocation.GeolocationModel
 import com.dellapp.weatherapp.core.common.geolocation.createGeolocator
 import com.dellapp.weatherapp.core.ui.components.GradientBox
 import com.dellapp.weatherapp.feature.home.ui.HomeScreen
+import dev.jordond.compass.geolocation.GeolocatorResult
 import dev.stateholder.extensions.collectAsState
 import org.jetbrains.compose.resources.painterResource
 import weatherapp.composeapp.generated.resources.Res
@@ -33,8 +34,15 @@ class SplashScreen : Screen {
         }
         val state by model.collectAsState()
 
-        LaunchedEffect(state.location) {
-            navigator.push(HomeScreen(model))
+        LaunchedEffect(state.location, state.lastResult) {
+            when {
+                state.location == null && state.lastResult !is GeolocatorResult.PermissionDenied -> {
+                    model.currentLocation()
+                }
+                else -> {
+                    navigator.push(HomeScreen(model))
+                }
+            }
         }
 
         GradientBox(
