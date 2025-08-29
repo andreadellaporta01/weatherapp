@@ -1,8 +1,8 @@
-package com.dellapp.weatherapp.core.common
+package com.dellapp.weatherapp.core.data.local
 
+import com.dellapp.weatherapp.core.common.Context
 import java.io.File
 import java.util.Properties
-
 
 private val preferencesDir = File(System.getProperty("user.home"), ".weatherapp").apply { mkdirs() }
 private val file = File(preferencesDir, "preferences.properties")
@@ -19,4 +19,3 @@ actual suspend fun Context?.putData(key: String, `object`: String) {
     properties[key] = `object`
     file.outputStream().use { properties.store(it, null) }
 }
-

@@ -1,5 +1,6 @@
-package com.dellapp.weatherapp.core.common
+package com.dellapp.weatherapp.core.data.local
 
+import com.dellapp.weatherapp.core.common.Context
 import kotlinx.browser.window
 
 

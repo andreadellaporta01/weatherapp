@@ -13,8 +13,8 @@ import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.svg.SvgDecoder
-import com.dellapp.weatherapp.core.common.AppDataStore
-import com.dellapp.weatherapp.core.common.AppDataStoreManager
+import com.dellapp.weatherapp.core.data.local.AppDataStore
+import com.dellapp.weatherapp.core.data.local.AppDataStoreManager
 import com.dellapp.weatherapp.core.common.Context
 import com.dellapp.weatherapp.core.common.Localization
 import com.dellapp.weatherapp.core.common.Theme

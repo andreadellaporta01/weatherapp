@@ -1,7 +1,7 @@
 package com.dellapp.weatherapp.feature.settings.domain
 
-import com.dellapp.weatherapp.core.common.AppDataStore
-import com.dellapp.weatherapp.core.common.DataStoreKeys
+import com.dellapp.weatherapp.core.data.local.AppDataStore
+import com.dellapp.weatherapp.core.data.local.DataStoreKeys
 
 class SetThemeUseCase(
     private val appDataStore: AppDataStore

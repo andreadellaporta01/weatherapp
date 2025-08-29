@@ -1,4 +1,4 @@
-package com.dellapp.weatherapp.core.common
+package com.dellapp.weatherapp.core.data.local
 
 object DataStoreKeys {
     const val LANGUAGE = "com.dellapp.weatherapp.LANGUAGE"

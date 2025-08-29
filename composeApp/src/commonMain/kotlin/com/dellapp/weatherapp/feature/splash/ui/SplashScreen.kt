@@ -36,7 +36,7 @@ class SplashScreen : Screen {
 
         LaunchedEffect(state.location, state.lastResult) {
             when {
-                state.location == null && state.lastResult !is GeolocatorResult.PermissionDenied -> {
+                state.location == null && state.lastResult !is GeolocatorResult.PermissionDenied && state.lastResult !is GeolocatorResult.NotSupported -> {
                     model.currentLocation()
                 }
                 else -> {

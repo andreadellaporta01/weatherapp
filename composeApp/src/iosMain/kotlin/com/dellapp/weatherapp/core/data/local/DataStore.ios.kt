@@ -1,8 +1,8 @@
-package com.dellapp.weatherapp.core.common
+package com.dellapp.weatherapp.core.data.local
 
+import com.dellapp.weatherapp.core.common.Context
 import kotlinx.coroutines.flow.MutableSharedFlow
 import platform.Foundation.NSUserDefaults
-
 
 actual suspend fun Context?.putData(key: String, `object`: String) {
     val sharedFlow = MutableSharedFlow<String>()

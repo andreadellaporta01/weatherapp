@@ -1,10 +1,11 @@
-package com.dellapp.weatherapp.core.common
+package com.dellapp.weatherapp.core.data.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.dellapp.weatherapp.core.common.Context
 import kotlinx.coroutines.flow.first
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(APP_DATASTORE)

@@ -1,7 +1,7 @@
 package com.dellapp.weatherapp.core.domain.usecase
 
-import com.dellapp.weatherapp.core.common.AppDataStore
-import com.dellapp.weatherapp.core.common.DataStoreKeys
+import com.dellapp.weatherapp.core.data.local.AppDataStore
+import com.dellapp.weatherapp.core.data.local.DataStoreKeys
 import com.dellapp.weatherapp.core.domain.model.Weather
 import com.dellapp.weatherapp.core.domain.repository.WeatherRepository
 
