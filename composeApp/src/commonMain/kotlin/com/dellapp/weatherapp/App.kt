@@ -13,8 +13,8 @@ import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.svg.SvgDecoder
-import com.dellapp.weatherapp.core.data.local.AppDataStore
-import com.dellapp.weatherapp.core.data.local.AppDataStoreManager
+import com.dellapp.weatherapp.core.domain.repository.AppDataStoreRepository
+import com.dellapp.weatherapp.core.data.local.AppDataStoreRepositoryManager
 import com.dellapp.weatherapp.core.common.Context
 import com.dellapp.weatherapp.core.common.Localization
 import com.dellapp.weatherapp.core.common.Theme
@@ -83,7 +83,7 @@ fun initKoin(context: Context?, config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
         val dataStoreModule = module {
-            single<AppDataStore> { AppDataStoreManager(context) }
+            single<AppDataStoreRepository> { AppDataStoreRepositoryManager(context) }
         }
         modules(
             targetModule,
