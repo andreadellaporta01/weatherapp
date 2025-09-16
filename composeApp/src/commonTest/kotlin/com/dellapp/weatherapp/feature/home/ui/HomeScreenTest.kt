@@ -1,11 +1,14 @@
 package com.dellapp.weatherapp.feature.home.ui
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
-import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import cafe.adriel.voyager.navigator.Navigator
 import com.dellapp.weatherapp.core.common.geolocation.GeolocationModel
 import com.dellapp.weatherapp.core.common.geolocation.createGeolocator
@@ -16,11 +19,9 @@ import com.dellapp.weatherapp.core.ui.CoreViewModel
 import com.dellapp.weatherapp.feature.home.domain.GetLastFavoriteCityUseCase
 import com.dellapp.weatherapp.feature.splash.ui.SplashScreen
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.module.dsl.viewModel
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import kotlin.test.AfterTest
@@ -55,11 +56,15 @@ class HomeScreenCommonTest : KoinTest {
                 }
             )
         }
-
+        val fakeViewModelStoreOwner = FakeViewModelStoreOwner()
         setContent {
-            MaterialTheme {
-                Navigator(screen = SplashScreen()) {
-                    HomeScreen(FakeGeolocatorModel()).Content()
+            CompositionLocalProvider(
+                LocalViewModelStoreOwner provides fakeViewModelStoreOwner
+            ) {
+                MaterialTheme {
+                    Navigator(screen = SplashScreen()) {
+                        HomeScreen(FakeGeolocatorModel()).Content()
+                    }
                 }
             }
         }.apply {
@@ -68,4 +73,11 @@ class HomeScreenCommonTest : KoinTest {
             onNodeWithText("25°").assertIsDisplayed()
         }
     }
+}
+
+class FakeViewModelStoreOwner : ViewModelStoreOwner {
+    private val viewModelStoreOwner = ViewModelStore()
+
+    override val viewModelStore: ViewModelStore
+        get() = viewModelStoreOwner
 }

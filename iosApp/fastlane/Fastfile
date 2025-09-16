@@ -16,14 +16,11 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Unit tests on iPhone 16 Plus simulator"
+  desc "Runs tests on iOS simulator"
   lane :test do
-    run_tests(
-        project: "iosApp.xcodeproj",
-        scheme: "weatherAppTests",
-        sdk: "iphonesimulator",
-        devices: ["iPhone 16 Plus"],
-        derived_data_path: "build",
-    )
+      gradle(
+        tasks: [":composeApp:iosSimulatorArm64Test"],
+        project_dir: "../"
+      )
   end
 end

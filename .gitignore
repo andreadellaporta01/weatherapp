@@ -114,3 +114,23 @@ Pods/
 # Secrets
 config/
 /local.properties
+
+### Fastlane (sia in composeApp che in iOSApp) ###
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/test_output/
+*/fastlane/screenshots/
+*/fastlane/README.md
+
+# Env & secrets
+*/fastlane/.env
+*/fastlane/.env.*
+*/fastlane/.secrets
+*/fastlane/.keys
+
+# Deliver/Metadata (se non vuoi tenerli in git)
+*/fastlane/metadata/**/*.txt
+*/fastlane/metadata/**/*.md
+*/fastlane/metadata/**/*.xml
+*/fastlane/metadata/**/*.json
+

@@ -16,11 +16,11 @@
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests except iOS"
+  desc "Runs all connected Android tests"
   lane :test do
     gradle(
-     task: "test",
-     gradle_path: "../gradlew"
+          task: "connectedAndroidTest",
+          project_dir: "../"
     )
   end
 end
