@@ -3,6 +3,7 @@ name: Weather App Develop CI
 on:
   push:
     branches: [ "master", "develop", "feature/*", "bugfix/*" ]
+  workflow_dispatch:
 
 jobs:
   build-develop:
