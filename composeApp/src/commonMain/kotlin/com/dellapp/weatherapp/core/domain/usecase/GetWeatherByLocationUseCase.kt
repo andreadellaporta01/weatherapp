@@ -5,11 +5,11 @@ import com.dellapp.weatherapp.core.data.local.DataStoreKeys
 import com.dellapp.weatherapp.core.domain.model.Weather
 import com.dellapp.weatherapp.core.domain.repository.WeatherRepository
 
-class GetWeatherByLocationUseCase(
+open class GetWeatherByLocationUseCase(
     private val repository: WeatherRepository,
     private val appDataStoreRepository: AppDataStoreRepository
 ) {
-    suspend operator fun invoke(lat: Double, lon: Double): Result<Weather> {
+    open suspend operator fun invoke(lat: Double, lon: Double): Result<Weather> {
         try {
             val lang = appDataStoreRepository.readValue(DataStoreKeys.LANGUAGE)
             return repository.getWeather(lat, lon, lang ?: "en")

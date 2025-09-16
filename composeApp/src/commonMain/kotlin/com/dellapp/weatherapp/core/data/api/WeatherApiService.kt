@@ -14,7 +14,7 @@ import io.ktor.client.request.parameter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class WeatherApiService {
+open class WeatherApiService {
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
             json(Json {
@@ -36,7 +36,7 @@ class WeatherApiService {
     private val baseUrlGeo = "https://api.openweathermap.org/geo/1.0"
     private val apiKey = ApiConfig.API_KEY
 
-    suspend fun getCityCoordinates(
+    open suspend fun getCityCoordinates(
         city: String,
     ): List<CityDto> {
         return httpClient.get("$baseUrlGeo/direct") {
@@ -58,7 +58,7 @@ class WeatherApiService {
         }.body()
     }
 
-    suspend fun getWeather(
+    open suspend fun getWeather(
         lat: Double, lon: Double, lang: String, units: String = "metric"
     ): WeatherDto {
         return httpClient.get("$baseUrl/3.0/onecall") {
@@ -71,7 +71,7 @@ class WeatherApiService {
         }.body()
     }
 
-    suspend fun getAirQuality(
+    open suspend fun getAirQuality(
         lat: Double,
         lon: Double,
     ): AirDto {

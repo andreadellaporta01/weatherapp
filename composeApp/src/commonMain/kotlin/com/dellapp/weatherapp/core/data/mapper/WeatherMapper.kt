@@ -11,8 +11,8 @@ import com.dellapp.weatherapp.core.domain.model.Weather
 import com.dellapp.weatherapp.core.domain.model.WeatherCondition
 import com.dellapp.weatherapp.core.domain.model.WeatherInfo
 
-class WeatherMapper {
-    fun mapToWeather(dto: WeatherDto, cityName: String?, airQuality: Int?): Weather {
+open class WeatherMapper {
+    open fun mapToWeather(dto: WeatherDto, cityName: String?, airQuality: Int?): Weather {
         return Weather(
             cityName = cityName.orEmpty(),
             airQuality = airQuality,
@@ -67,7 +67,7 @@ class WeatherMapper {
         )
     }
 
-    fun mapToCity(dto: CityDto): City {
+    open fun mapToCity(dto: CityDto): City {
         return City(
             name = dto.name.orEmpty(),
             lat = dto.lat ?: 0.0,
@@ -76,7 +76,7 @@ class WeatherMapper {
         )
     }
 
-    fun mapToAir(dto: AirDto): Air {
+    open fun mapToAir(dto: AirDto): Air {
         return Air(
             airQuality = dto.quality?.firstOrNull()?.main?.aqi ?: 0
         )

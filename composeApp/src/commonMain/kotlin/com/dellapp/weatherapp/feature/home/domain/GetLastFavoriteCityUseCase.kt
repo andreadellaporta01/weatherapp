@@ -5,10 +5,10 @@ import com.dellapp.weatherapp.core.data.local.DataStoreKeys
 import com.dellapp.weatherapp.core.domain.model.City
 import kotlinx.serialization.json.Json
 
-class GetLastFavoriteCityUseCase(
+open class GetLastFavoriteCityUseCase(
     private val appDataStoreRepository: AppDataStoreRepository
 ) {
-    suspend operator fun invoke(): Result<City?> {
+    open suspend operator fun invoke(): Result<City?> {
         try {
             val cityJson = appDataStoreRepository.readValue(DataStoreKeys.LAST_FAVORITE_CITY)
             var city: City? = null

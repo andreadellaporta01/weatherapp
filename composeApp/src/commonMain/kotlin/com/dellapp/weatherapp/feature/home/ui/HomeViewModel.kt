@@ -11,20 +11,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
+open class HomeViewModel(
     private val getWeatherByLocationUseCase: GetWeatherByLocationUseCase,
     private val getLastFavoriteCityUseCase: GetLastFavoriteCityUseCase,
 ) : ViewModel() {
 
     private var lastLocation: Location? = null
     private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
-    val uiState: StateFlow<HomeUiState> = _uiState
+    open val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
         getPreferredCity()
     }
 
-    fun getPreferredCity() = viewModelScope.launch {
+    open fun getPreferredCity() = viewModelScope.launch {
         getLastFavoriteCityUseCase.invoke()
             .onSuccess { city ->
                 if(city != null) {
@@ -71,4 +71,6 @@ class HomeViewModel(
             }
         }
     }
+
+    open fun onLocationUpdate(location: Any?) {}
 }

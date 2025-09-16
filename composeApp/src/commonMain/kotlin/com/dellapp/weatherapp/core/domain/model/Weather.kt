@@ -13,7 +13,6 @@ data class Weather(
     val dailyForecast: List<WeatherInfo>,
     val airQuality: Int? = null
 )
-
 data class CurrentWeather(
     val temperature: Double,
     val minTemperature: Double,

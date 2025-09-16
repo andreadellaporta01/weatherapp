@@ -2,6 +2,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import java.util.Properties
 
@@ -14,17 +15,23 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localProperties.load(localPropertiesFile.inputStream())
+val secretProperties = Properties()
+val secretPropertiesFile = rootProject.file("secret.properties")
+if (secretPropertiesFile.exists()) {
+    secretProperties.load(secretPropertiesFile.inputStream())
 }
 
 kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
+        }
+        dependencies {
+            androidTestImplementation(libs.androidx.ui.test.junit4.android)
+            debugImplementation(libs.androidx.ui.test.manifest)
         }
     }
     
@@ -64,6 +71,7 @@ kotlin {
     
     sourceSets {
         val desktopMain by getting
+        val desktopTest by getting
         
         androidMain.dependencies {
             // Android-specific Ktor client
@@ -149,11 +157,20 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlin.coroutines.test)
+            implementation(libs.turbine)
+            implementation(libs.junit)
+            implementation(libs.koin.test)
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.cio)
+        }
+        desktopTest.dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }
@@ -168,6 +185,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -314,7 +332,7 @@ abstract class GenerateApiConfigTask : DefaultTask() {
 }
 
 val generateApiConfig = tasks.register<GenerateApiConfigTask>("generateApiConfig") {
-    apiKey.set(localProperties.getProperty("API_KEY", ""))
+    apiKey.set(secretProperties.getProperty("API_KEY", ""))
     outputFile.set(layout.buildDirectory.file("generated/kotlin/config/ApiConfig.kt"))
 }
 

@@ -7,11 +7,12 @@ import dev.jordond.compass.geolocation.GeolocatorResult
 import dev.jordond.compass.geolocation.Locator
 import dev.jordond.compass.geolocation.TrackingStatus
 import dev.stateholder.extensions.voyager.StateScreenModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class GeolocationModel(private val geolocator: Geolocator) : StateScreenModel<GeolocationModel.State>(State()) {
+open class GeolocationModel(private val geolocator: Geolocator) : StateScreenModel<GeolocationModel.State>(State()) {
 
     init {
         screenModelScope.launch {
@@ -26,7 +27,7 @@ class GeolocationModel(private val geolocator: Geolocator) : StateScreenModel<Ge
             .launchIn(screenModelScope)
     }
 
-    fun currentLocation() {
+    open fun currentLocation() {
         screenModelScope.launch {
             updateState { it.copy(loading = true, lastResult = null, location = null) }
             geolocator.current().onSuccess { location ->
@@ -53,6 +54,9 @@ class GeolocationModel(private val geolocator: Geolocator) : StateScreenModel<Ge
         val permissionsDeniedForever: Boolean =
             lastResult is GeolocatorResult.PermissionDenied && lastResult.forever
     }
+
+    open val permissionsDeniedForever: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    open val location: MutableStateFlow<Nothing?> = MutableStateFlow(null)
 }
 
 fun createGeolocator(): Geolocator {

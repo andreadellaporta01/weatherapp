@@ -10,17 +10,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CoreViewModel(
+open class CoreViewModel(
     private val getLanguageUseCase: GetLanguageUseCase,
     private val getThemeUseCase: GetThemeUseCase
 ) : ViewModel() {
 
     private val _selectedLanguage = MutableStateFlow(Language.English)
-    val selectedLanguage = _selectedLanguage.asStateFlow()
+    open val selectedLanguage = _selectedLanguage.asStateFlow()
 
 
     private val _selectedThemeStyle = MutableStateFlow<ThemeStyle?>(null)
-    val selectedThemeStyle = _selectedThemeStyle.asStateFlow()
+    open val selectedThemeStyle = _selectedThemeStyle.asStateFlow()
 
     init {
         getLanguage()
