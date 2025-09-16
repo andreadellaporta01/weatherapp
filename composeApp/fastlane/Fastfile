@@ -16,7 +16,7 @@
 default_platform(:android)
 
 platform :android do
-  desc "Runs all connected Android tests"
+  desc "Runs all connected Android tests, build and release"
   lane :test do
     gradle(
           task: "connectedAndroidTest",

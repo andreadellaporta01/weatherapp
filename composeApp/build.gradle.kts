@@ -201,6 +201,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("weatherapp-release-upload-keystore.jks")
+            storePassword = getSecret("ANDROID_PASSWORD")
+            keyAlias = getSecret("ANDROID_ALIAS")
+            keyPassword = getSecret("ANDROID_PASSWORD")
+        }
+    }
 }
 
 dependencies {
@@ -344,6 +352,16 @@ val copyApiConfig = tasks.register<Copy>("copyApiConfig") {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     dependsOn(copyApiConfig)
+}
+
+fun getSecret(propertyName: String): String {
+    val secretsFile = rootProject.file("secrets.properties")
+    if (secretsFile.exists()) {
+        val properties = Properties()
+        secretsFile.inputStream().use { properties.load(it) }
+        val property = properties.getProperty(propertyName)
+        return property
+    } else return "invalid"
 }
 
 
