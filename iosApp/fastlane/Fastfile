@@ -20,7 +20,7 @@ platform :ios do
   lane :test do
     run_tests(
         project: "iosApp.xcodeproj",
-        scheme: "kmm_fastlaneTests",
+        scheme: "weatherAppTests",
         sdk: "iphonesimulator",
         devices: ["iPhone 16 Plus"],
         derived_data_path: "build",

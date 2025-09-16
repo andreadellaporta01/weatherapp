@@ -34,10 +34,6 @@ class FakeGeolocatorModel : GeolocationModel(geolocator = createGeolocator())
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeScreenCommonTest : KoinTest {
-    private val fakeUiState = MutableStateFlow(
-        HomeUiState(isLoading = false, error = null, weather = null)
-    )
-
     @AfterTest
     fun tearDown() {
         stopKoin()
