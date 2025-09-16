@@ -351,7 +351,7 @@ val copyApiConfig = tasks.register<Copy>("copyApiConfig") {
     into("src/commonMain/kotlin/config/")
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+tasks.named("generateComposeResClass") {
     dependsOn(copyApiConfig)
 }
 
