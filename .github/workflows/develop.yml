@@ -39,7 +39,8 @@ jobs:
         run: |
           ./gradlew \
             kotlinUpgradeYarnLock \
-            build
+            build \ 
+            --no-test
 
       - name: Check
         run: ./gradlew check
