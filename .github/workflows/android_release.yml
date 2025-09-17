@@ -35,9 +35,16 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :composeApp:assembleRelease :composeApp:bundleRelease
 
-      - name: Upload Binaries
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: binaries
+          name: apk
+          path: composeApp/build/outputs/apk/release/*.apk
           if-no-files-found: error
-          path: 'composeApp/build/outputs/*/release/com.dellapp.app-release-*'
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: aab
+          path: composeApp/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
