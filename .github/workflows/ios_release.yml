@@ -96,14 +96,17 @@ jobs:
 
       # Step 8: Build the archive
       - name: Build the iOS app
+        env:
+          ONLY_ACTIVE_ARCH: YES
         run: |
           xcodebuild clean archive \
             -project iosApp/iosApp.xcodeproj \
             -scheme iosApp \
-            -sdk iphoneos \
             -configuration Release \
             -archivePath $GITHUB_WORKSPACE/build/WeatherApp.xcarchive \
+            -sdk iphoneos \
             -allowProvisioningUpdates \
+            -destination 'generic/platform=iOS' \
             -quiet
 
       # Step 9: Export IPA
