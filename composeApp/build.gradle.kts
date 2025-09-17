@@ -184,8 +184,8 @@ android {
         applicationId = "com.dellapp.weatherapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
@@ -351,8 +351,35 @@ val copyApiConfig = tasks.register<Copy>("copyApiConfig") {
     into("src/commonMain/kotlin/config/")
 }
 
+tasks.register("updatePlistVersion") {
+    val plistFile = project.file("../iosApp/iosApp/Info.plist") // Path to your `Info.plist` file
+
+    doLast {
+        if (!plistFile.exists()) {
+            throw GradleException("Info.plist not found at ${plistFile.absolutePath}")
+        }
+
+        val appVersion: String = libs.versions.versionName.get()
+        val buildVersion: String = libs.versions.versionCode.get()
+
+        var plistContent = plistFile.readText()
+
+        plistContent = plistContent.replace(
+            Regex("<key>CFBundleShortVersionString</key>\\s*<string>.*?</string>"),
+            "<key>CFBundleShortVersionString</key>\n    <string>$appVersion</string>"
+        )
+        plistContent = plistContent.replace(
+            Regex("<key>CFBundleVersion</key>\\s*<string>.*?</string>"),
+            "<key>CFBundleVersion</key>\n    <string>$buildVersion</string>"
+        )
+
+        plistFile.writeText(plistContent)
+    }
+}
+
 tasks.named("generateComposeResClass") {
     dependsOn(copyApiConfig)
+    dependsOn("updatePlistVersion")
 }
 
 fun getSecret(propertyName: String): String {
