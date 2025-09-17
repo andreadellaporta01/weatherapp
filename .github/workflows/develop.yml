@@ -54,10 +54,7 @@ jobs:
       - name: run connectedAndroidTest
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 35
-          target: default
-          arch: x86_64
-          profile: Pixel_6
+          api-level: 33
           script: ./gradlew :composeApp:connectedAndroidTest
       # Upload Android Instrumented Test Report
       - name: Upload Android Test Report
