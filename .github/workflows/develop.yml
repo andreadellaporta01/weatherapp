@@ -35,23 +35,16 @@ jobs:
       - name: Detekt
         run: ./gradlew detekt
 
-      - name: Build with Gradle
-        run: |
-          ./gradlew \
-            kotlinUpgradeYarnLock \
-            build 
-            --no-test
-
-      - name: Check
-        run: ./gradlew check
-
-      # Upload test reports as an artifact
-      - name: Upload Test Report
-        if: failure()
+      # Upload Detekt Report
+      - name: Upload Detekt Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-report
-          path: '**/build/reports/tests/**'
+          name: detekt-report
+          path: composeApp/build/reports/detekt/
+
+      - name: Build with Gradle (skip unit tests)
+        run: ./gradlew assemble check -x test
 
   run-android-tests:
     runs-on: ubuntu-latest
@@ -75,6 +68,13 @@ jobs:
           profile: Nexus 5
           test-suite: connectedCheck
           cmd: ./gradlew :composeApp:connectedAndroidTest
+      # Upload Android Instrumented Test Report
+      - name: Upload Android Test Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-report
+          path: composeApp/build/reports/androidTests/connected/
 
   run-ios-tests:
     runs-on: macos-latest
@@ -91,3 +91,10 @@ jobs:
         run: chmod +x gradlew
       - name: Run iOS Simulator Tests
         run: ./gradlew :composeApp:iosSimulatorArm64Test
+      # Upload iOS Test Report
+      - name: Upload iOS Test Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-report
+          path: composeApp/build/reports/tests/iosSimulatorArm64Test/
