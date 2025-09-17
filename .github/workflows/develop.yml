@@ -35,16 +35,6 @@ jobs:
       - name: Detekt
         run: ./gradlew detekt
 
-      # Upload Detekt Report
-      - name: Upload Detekt Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: detekt-report
-          path: |
-            build/reports/detekt/
-            composeApp/build/reports/detekt/
-
       - name: Build with Gradle (skip unit tests)
         run: ./gradlew assemble
 
@@ -67,7 +57,7 @@ jobs:
           api-level: 35
           target: default
           arch: x86_64
-          profile: Pixel 7
+          profile: Pixel_6
           script: ./gradlew :composeApp:connectedAndroidTest
       # Upload Android Instrumented Test Report
       - name: Upload Android Test Report
