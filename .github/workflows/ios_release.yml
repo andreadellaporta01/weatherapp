@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     name: Build iOS App Bundle
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       # Step : Checkout Code
@@ -95,6 +95,9 @@ jobs:
           </plist>
           EOF
 
+      - name: Clean Derived Data
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
+    
       # Build the archive
       - name: Build the iOS app
         run: |
