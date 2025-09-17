@@ -7,21 +7,34 @@ on:
 jobs:
   build:
     name: Build iOS App Bundle
-    runs-on: macos-15
+    runs-on: macos-latest
 
     steps:
-      # Step 1: Checkout Code
+      # Step : Checkout Code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set Up JDK for Gradle
+      # Step : Set Up JDK for Gradle
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'zulu'
 
-      # Step 3: Install Apple certificate and provisioning profile
+      # Step : Set up Xcode
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "16.1"
+
+      # Decode Keystore and secrets.properties
+      - name: Decode secrets and keystore
+        run: |
+          echo "$SECRETS_FILE" > $GITHUB_WORKSPACE/secrets.properties
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          SECRETS_FILE: ${{ secrets.SECRETS_FILE }}
+
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.APPLE_BUILD_CERTIFICATE_BASE64 }}
@@ -29,51 +42,30 @@ jobs:
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.APPLE_BUILD_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
         run: |
+          # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
+          # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
 
+          # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
+          # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
+          # apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-      # Step 4: Build KMP composeApp Module
-      - name: Build composeApp module for iOS
-        run: |
-          ./gradlew clean build --build-cache --info
-
-      # Step 5: Clean Derived Data
-      - name: Clean Derived Data
-        run: |
-          rm -rf ~/Library/Developer/Xcode/DerivedData/*
-
-      # Step 6: Build the archive
-      - name: Build the iOS app
-        env:
-          ONLY_ACTIVE_ARCH: YES
-        run: |
-          xcodebuild clean archive \
-            -project iosApp/iosApp.xcodeproj \
-            -scheme iosApp \
-            -configuration Release \
-            -archivePath $GITHUB_WORKSPACE/build/WeatherApp.xcarchive \
-            -sdk iphoneos \
-            -destination 'generic/platform=iOS' \
-            -allowProvisioningUpdates \
-            ARCHS=arm64 \
-            -quiet
-
-      # Step 7: Create exportOptions.plist
+      # Write exportOptions file
       - name: Create exportOptions.plist
         env:
           TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
@@ -103,7 +95,18 @@ jobs:
           </plist>
           EOF
 
-      # Step 8: Export IPA
+      # Build the archive
+      - name: Build the iOS app
+        run: |
+          xcodebuild clean archive \
+            -project $GITHUB_WORKSPACE/iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath $GITHUB_WORKSPACE/build/WeatherApp.xcarchive \
+            -verbose
+
+      # Export the IPA (App Bundle)
       - name: Export IPA
         run: |
           xcodebuild -exportArchive \
@@ -111,15 +114,28 @@ jobs:
             -exportOptionsPlist exportOptions.plist \
             -exportPath $GITHUB_WORKSPACE/build
 
-      # Step 9: Upload IPA Artifact
+      # Step : Upload the IPA as an artifact
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: iOS-App
           path: build/*.ipa
 
-      # Step 10: Clean up
-      - name: Clean up keychain
-        if: always()
-        run: |
-          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+# TODO upload to testflight
+#      - name: Upload to TestFlight
+#        env:
+#          APPLE_ID: ${{ secrets.APPLE_APP_UPLOAD_USERID }}
+#          APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_UPLOAD_PASSWORD }}
+#          IPA_PATH: build/OasisShoreditch.ipa  # Update this to your IPA path
+#        run: |
+#          xcrun altool --upload-app \
+#            --type ios \
+#            --file "$IPA_PATH" \
+#            --username "$APPLE_ID" \
+#            --password "$APP_SPECIFIC_PASSWORD" \
+#            --verbose  # Optional: for detailed logs
+#
+#      - name: Check Upload Status
+#        if: failure()
+#        run: |
+#          echo "Upload failed. Check the logs above for more details."
