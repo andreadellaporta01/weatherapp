@@ -68,8 +68,7 @@ jobs:
           target: default
           arch: x86_64
           profile: Nexus 5
-          test-suite: connectedCheck
-          cmd: ./gradlew :composeApp:connectedAndroidTest
+          script: ./gradlew :composeApp:connectedAndroidTest
       # Upload Android Instrumented Test Report
       - name: Upload Android Test Report
         if: always()
