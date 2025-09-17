@@ -351,18 +351,26 @@ val copyApiConfig = tasks.register<Copy>("copyApiConfig") {
     into("src/commonMain/kotlin/config/")
 }
 
-tasks.register("updatePlistVersion") {
-    val plistFile = project.file("../iosApp/iosApp/Info.plist") // Path to your `Info.plist` file
+abstract class UpdatePlistVersion : DefaultTask() {
 
-    doLast {
-        if (!plistFile.exists()) {
-            throw GradleException("Info.plist not found at ${plistFile.absolutePath}")
+    @get:InputFile
+    abstract val plistFile: RegularFileProperty
+
+    @get:Input
+    abstract var appVersion: String
+
+    @get:Input
+    abstract var buildVersion: String
+
+    @TaskAction
+    fun update() {
+        val file = plistFile.get().asFile
+
+        if (!file.exists()) {
+            throw GradleException("Info.plist not found at ${file.absolutePath}")
         }
 
-        val appVersion: String = libs.versions.versionName.get()
-        val buildVersion: String = libs.versions.versionCode.get()
-
-        var plistContent = plistFile.readText()
+        var plistContent = file.readText()
 
         plistContent = plistContent.replace(
             Regex("<key>CFBundleShortVersionString</key>\\s*<string>.*?</string>"),
@@ -373,13 +381,19 @@ tasks.register("updatePlistVersion") {
             "<key>CFBundleVersion</key>\n    <string>$buildVersion</string>"
         )
 
-        plistFile.writeText(plistContent)
+        file.writeText(plistContent)
     }
+}
+
+val updatePlistVersion = tasks.register<UpdatePlistVersion>("updatePlistVersion") {
+    plistFile.set(layout.projectDirectory.file("../iosApp/iosApp/Info.plist"))
+    appVersion = libs.versions.versionName.get()
+    buildVersion = libs.versions.versionCode.get()
 }
 
 tasks.named("generateComposeResClass") {
     dependsOn(copyApiConfig)
-    dependsOn("updatePlistVersion")
+    dependsOn(updatePlistVersion)
 }
 
 fun getSecret(propertyName: String): String {
