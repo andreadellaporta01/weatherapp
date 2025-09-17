@@ -50,7 +50,7 @@ jobs:
       # Step 4: Build KMP composeApp Module
       - name: Build composeApp module for iOS
         run: |
-          ./gradlew :composeApp:clean :composeApp:assembleIosX64 :composeApp:assembleIosArm64 --build-cache --info
+          ./gradlew clean build --build-cache --info
 
       # Step 5: Clean Derived Data
       - name: Clean Derived Data
