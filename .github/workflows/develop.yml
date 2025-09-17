@@ -2,7 +2,7 @@ name: Weather App Develop CI
 
 on:
   push:
-    branches: [ "master", "develop", "feature/*", "bugfix/*" ]
+    branches: [ "develop", "feature/*", "bugfix/*" ]
   workflow_dispatch:
 
 jobs:
@@ -26,17 +26,15 @@ jobs:
 
       - name: Decode secrets
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > $GITHUB_WORKSPACE/weatherapp-release-upload-keystore.jks
           echo "$SECRETS_FILE" > $GITHUB_WORKSPACE/secrets.properties
         env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           SECRETS_FILE: ${{ secrets.SECRETS_FILE }}
 
       - name: Detekt
         run: ./gradlew detekt
 
       - name: Build with Gradle (skip unit tests)
-        run: ./gradlew assemble
+        run: ./gradlew assembleDebug
 
   run-android-tests:
     runs-on: ubuntu-latest
