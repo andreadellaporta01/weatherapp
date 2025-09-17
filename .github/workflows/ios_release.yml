@@ -98,7 +98,7 @@ jobs:
       - name: Build the iOS app
         run: |
           xcodebuild clean archive \
-            -workspace iosApp/iosApp.xcworkspace \
+            -project iosApp/iosApp.xcodeproj \
             -scheme iosApp \
             -sdk iphoneos \
             -configuration Release \
