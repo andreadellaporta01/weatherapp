@@ -1,0 +1,44 @@
+name: Desktop DEB artifact CI
+
+on:
+  push:
+    branches: [ "master"]
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Decode secrets
+        run: |
+          echo "$SECRETS_FILE" > $GITHUB_WORKSPACE/secrets.properties
+        env:
+          SECRETS_FILE: ${{ secrets.SECRETS_FILE }}
+
+      - name: install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install binutils
+          sudo apt-get install fakeroot
+
+        # Build the DEB file using the custom Gradle task
+      - name: Package DEB
+        run: ./gradlew packageReleaseDeb
+
+        # Upload DEB as an artifact
+      - name: Upload DEB as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WeatherApp.deb
+          path: composeApp/build/compose/binaries/main-release/deb/*.deb

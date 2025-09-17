@@ -24,10 +24,10 @@ if (secretPropertiesFile.exists()) {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class) instrumentedTestVariant.sourceSetTree.set(
+            KotlinSourceSetTree.test
+        )
+        @OptIn(ExperimentalKotlinGradlePluginApi::class) compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
         dependencies {
@@ -35,22 +35,19 @@ kotlin {
             debugImplementation(libs.androidx.ui.test.manifest)
         }
     }
-    
+
     listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
+        iosX64(), iosArm64(), iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
         }
     }
-    
+
     jvm("desktop")
-    
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
+
+    @OptIn(ExperimentalWasmDsl::class) wasmJs {
         outputModuleName.set("composeApp")
         browser {
             val rootDirPath = project.rootDir.path
@@ -69,11 +66,11 @@ kotlin {
         }
         binaries.executable()
     }
-    
+
     sourceSets {
         val desktopMain by getting
         val desktopTest by getting
-        
+
         androidMain.dependencies {
             // Android-specific Ktor client
             implementation(libs.ktor.client.okhttp)
@@ -162,8 +159,7 @@ kotlin {
             implementation(libs.turbine)
             implementation(libs.junit)
             implementation(libs.koin.test)
-            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-            implementation(compose.uiTest)
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(compose.uiTest)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -224,11 +220,39 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.dellapp.weatherapp"
-            packageVersion = "1.0.0"
+            packageVersion = libs.versions.versionName.get()
+            vendor = libs.versions.vendor.get()
+            description = libs.versions.description.get()
 
             macOS {
+                dockName = libs.versions.name.get()
                 iconFile.set(project.file("src/desktopMain/resources/icon.icns"))
                 bundleID = "com.dellapp.weatherapp"
+                infoPlist {
+                    extraKeysRawXml = """
+            <key>NSOutgoingConnectionsUsageDescription</key>
+            <string>This app requires internet access to load content.</string>
+            <key>NSAppTransportSecurity</key>
+            <dict>
+                <key>NSAllowsArbitraryLoads</key>
+                <true/>
+                <key>NSAllowsArbitraryLoadsInWebContent</key>
+                <true/>
+                <key>NSExceptionDomains</key>
+                <dict>
+                    <key>raw.githubusercontent.com</key>
+                    <dict>
+                        <key>NSIncludesSubdomains</key>
+                        <true/>
+                        <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+                        <true/>
+                        <key>NSTemporaryExceptionMinimumTLSVersion</key>
+                        <string>TLSv1.2</string>
+                    </dict>
+                </dict>
+            </dict>
+        """.trimIndent()
+                }
                 signing {
                     sign.set(false)
                 }
@@ -236,10 +260,23 @@ compose.desktop {
 
             windows {
                 iconFile.set(project.file("src/desktopMain/resources/icon.ico"))
+                msiPackageVersion = libs.versions.versionName.get()
+                shortcut = true
+                dirChooser = true
+                menu = true
+                menuGroup = libs.versions.menugroup.get()
             }
 
             linux {
                 iconFile.set(project.file("src/desktopMain/resources/icon.png"))
+                debMaintainer = libs.versions.vendor.get()
+                menuGroup = libs.versions.menugroup.get()
+                shortcut = true
+            }
+            buildTypes.release.proguard {
+                version.set("7.4.0")
+                obfuscate.set(false)
+                isEnabled = false
             }
         }
     }
@@ -299,8 +336,7 @@ abstract class GenerateDrawableMap : DefaultTask() {
     }
 
     private fun toCamelCase(input: String): String {
-        return input.split("_", "-", " ")
-            .filter { it.isNotBlank() }
+        return input.split("_", "-", " ").filter { it.isNotBlank() }
             .joinToString("") { it.replaceFirstChar(Char::uppercaseChar) }
             .replaceFirstChar(Char::lowercaseChar)
     }
@@ -330,13 +366,15 @@ abstract class GenerateApiConfigTask : DefaultTask() {
     fun generate() {
         outputFile.get().asFile.apply {
             parentFile.mkdirs()
-            writeText("""
+            writeText(
+                """
                 package config
                 
                 internal object ApiConfig {
                     const val API_KEY = "${apiKey.get()}"
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
         }
     }
 }
