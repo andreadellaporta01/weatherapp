@@ -99,6 +99,7 @@ jobs:
         env:
           ONLY_ACTIVE_ARCH: YES
         run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData/*
           xcodebuild clean archive \
             -project iosApp/iosApp.xcodeproj \
             -scheme iosApp \
@@ -107,6 +108,7 @@ jobs:
             -sdk iphoneos \
             -allowProvisioningUpdates \
             -destination 'generic/platform=iOS' \
+            ARCHS=arm64 \
             -quiet
 
       # Step 9: Export IPA
