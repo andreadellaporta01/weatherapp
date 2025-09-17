@@ -195,7 +195,7 @@ android {
     }
     signingConfigs {
         create("release") {
-            storeFile = rootProject.file("weatherapp-release-upload-keystore.jks")
+            storeFile = rootProject.file("weatherapp-release.keystore")
             storePassword = getSecret("ANDROID_PASSWORD")
             keyAlias = getSecret("ANDROID_ALIAS")
             keyPassword = getSecret("ANDROID_PASSWORD")
