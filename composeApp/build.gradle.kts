@@ -193,15 +193,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
     signingConfigs {
         create("release") {
             storeFile = rootProject.file("weatherapp-release-upload-keystore.jks")
@@ -209,6 +200,16 @@ android {
             keyAlias = getSecret("ANDROID_ALIAS")
             keyPassword = getSecret("ANDROID_PASSWORD")
         }
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
