@@ -47,10 +47,10 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-      # Step 4: Build KMP Shared Module
-      - name: Build shared module for iOS
+      # Step 4: Build KMP composeApp Module
+      - name: Build composeApp module for iOS
         run: |
-          ./gradlew :shared:clean :shared:assembleIosX64 :shared:assembleIosArm64 --build-cache --info
+          ./gradlew :composeApp:clean :composeApp:assembleIosX64 :composeApp:assembleIosArm64 --build-cache --info
 
       # Step 5: Clean Derived Data
       - name: Clean Derived Data
