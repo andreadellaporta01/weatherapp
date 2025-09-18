@@ -16,10 +16,10 @@ plugins {
     alias(libs.plugins.detekt)
 }
 
-val secretProperties = Properties()
-val secretPropertiesFile = rootProject.file("secret.properties")
-if (secretPropertiesFile.exists()) {
-    secretProperties.load(secretPropertiesFile.inputStream())
+val secretsProperties = Properties()
+val secretsPropertiesFile = rootProject.file("secrets.properties")
+if (secretsPropertiesFile.exists()) {
+    secretsProperties.load(secretsPropertiesFile.inputStream())
 }
 
 kotlin {
@@ -349,6 +349,7 @@ val generateDrawableMap by tasks.registering(GenerateDrawableMap::class) {
 
 kotlin.sourceSets.named("commonMain") {
     kotlin.srcDir(generateDrawableMap.map { it.outputFile.get().asFile.parentFile })
+    kotlin.srcDir(layout.buildDirectory.dir("generated/kotlin"))
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -364,30 +365,23 @@ abstract class GenerateApiConfigTask : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        outputFile.get().asFile.apply {
-            parentFile.mkdirs()
-            writeText(
-                """
-                package config
-                
-                internal object ApiConfig {
-                    const val API_KEY = "${apiKey.get()}"
-                }
+        val file = outputFile.get().asFile
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            package config
+
+            internal object ApiConfig {
+                const val API_KEY = "${apiKey.get()}"
+            }
             """.trimIndent()
-            )
-        }
+        )
     }
 }
 
-val generateApiConfig = tasks.register<GenerateApiConfigTask>("generateApiConfig") {
-    apiKey.set(secretProperties.getProperty("API_KEY", ""))
+val generateApiConfig by tasks.registering(GenerateApiConfigTask::class) {
+    apiKey.set(secretsProperties.getProperty("API_KEY", ""))
     outputFile.set(layout.buildDirectory.file("generated/kotlin/config/ApiConfig.kt"))
-}
-
-val copyApiConfig = tasks.register<Copy>("copyApiConfig") {
-    dependsOn(generateApiConfig)
-    from(generateApiConfig.flatMap { it.outputFile })
-    into("src/commonMain/kotlin/config/")
 }
 
 abstract class UpdatePlistVersion : DefaultTask() {
@@ -431,7 +425,7 @@ val updatePlistVersion = tasks.register<UpdatePlistVersion>("updatePlistVersion"
 }
 
 tasks.named("generateComposeResClass") {
-    dependsOn(copyApiConfig)
+    dependsOn(generateApiConfig)
     dependsOn(updatePlistVersion)
 }
 
