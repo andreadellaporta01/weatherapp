@@ -2,6 +2,7 @@ name: Desktop MSI artifact CI
 on:
   push:
     branches: [ "master" ]
+  workflow_dispatch:
 jobs:
   build-msi:
     runs-on: windows-latest
