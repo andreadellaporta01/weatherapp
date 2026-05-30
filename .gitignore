@@ -1,136 +1,102 @@
-# === Kotlin Multiplatform ===
-
-# Gradle
+# === Build outputs ===
 .gradle/
 build/
+out/
+.kotlin/
+DerivedData/
+
+# Keep important Gradle files
 !gradle/wrapper/gradle-wrapper.jar
 !**/build.gradle.kts
 !**/settings.gradle.kts
 
-# IntelliJ / Android Studio
+# === IDE: IntelliJ / Android Studio ===
 .idea/
+.idea_modules/
 *.iml
 *.iws
 *.ipr
-out/
 *.hprof
-*.log
-.idea_modules/
 
-# Kotlin/Compose Web (WASM)
-jsApp/build/
-jsApp/node_modules/
-*.wasm
-*.map
-*.js
-npm-debug.log
-.yarn/
-.yarnrc.yml
-.pnp.*
+# === IDE: Xcode ===
+# Per-user state — ignore everywhere
+**/xcuserdata/
+**/*.xcuserstate
+**/*.xcuserdatad
+*.xcscheme
+# NOTE: do NOT ignore *.xcworkspace — iosApp/iosApp.xcworkspace must stay tracked
 
-# Compose Multiplatform Desktop
-desktopApp/build/
+# === IDE: VS Code ===
+.vscode/
+
+# === iOS ===
+Pods/
+.swiftpm/
+.build/
+*.ipa
+*.xcarchive
+
+# === Android packaging ===
+*.apk
+*.aab
+*.ap_
+*.jks
+*.keystore
+
+# === Compose Desktop distributables ===
+# (already inside build/, but defensive in case artifacts are copied out)
 *.dmg
 *.exe
 *.msi
 *.pkg
-*.app
 *.deb
 *.snap
 *.rpm
 
-# Android
-android/.gradle/
-android/build/
-android/app/build/
-android/local.properties
-android/captures/
-*.apk
-*.ap_
-*.aab
-android/.idea/
-*.keystore
-android/gradle-app.setting
-
-# iOS (Xcode)
-ios/Pods/
-ios/DerivedData/
-ios/.idea/
-ios/.DS_Store
-ios/*.xcodeproj/project.xcworkspace/xcuserdata/
-ios/*.xcodeproj/xcuserdata/
-ios/*.xcworkspace/xcuserdata/
-ios/*.xcuserstate
-ios/*.xcuserdatad
-ios/*.xcworkspace
-ios/build/
-ios/fastlane/report.xml
-ios/.swiftpm
-ios/.build/
-
-# Common
+# === Logs / OS / runtime junk ===
+*.log
+*.hprof
+logs/
 .DS_Store
 Thumbs.db
+npm-debug.log
 
-# VS Code (optional)
-.vscode/
-
-# Local environment / secrets (you may adjust)
+# === Secrets / local config ===
 .env
-composeApp/local.properties
+.env.local
+.env.*.local
+local.properties
 secrets.properties
-
-# Ktor / HTTP clients
-logs/
-
-# Kotlin
-.kotlin/
+composeApp/local.properties
+composeApp/secrets.properties
 composeApp/preferences.properties
+*.p12
+*.pem
+*.cer
+*.gpg
 
-# Xcode
-*.xcuserstate
-*.xcuserdatad/
-**/xcuserdata/
-*.xcworkspace/xcuserdata/
-**/xcuserdata/**/xcschememanagement.plist
-iosApp/iosApp.xcodeproj/xcuserdata
+# === Fastlane ===
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/test_output/
+**/fastlane/screenshots/
+**/fastlane/README.md
+**/fastlane/.env
+**/fastlane/.env.*
+**/fastlane/.secrets
+**/fastlane/.keys
+**/fastlane/metadata/**/*.txt
+**/fastlane/metadata/**/*.md
+**/fastlane/metadata/**/*.xml
+**/fastlane/metadata/**/*.json
 
-# User-specific schemes
-*.xcscheme
+# === Web / Yarn (used by wasmJs target) ===
+node_modules/
+.yarn/
+.yarnrc.yml
+.pnp.*
+# NOTE: kotlin-js-store/ is intentionally committed — Kotlin/Wasm reproducible builds
 
-# Build products
-DerivedData/
-
-# Archives
-*.xcarchive
-
-# CocoaPods (se usi CocoaPods)
-Pods/
-*.xcworkspace
-
-# Swift Package Manager
-.swiftpm/
-
-# Secrets
-config/
-/local.properties
-
-### Fastlane (sia in composeApp che in iOSApp) ###
-*/fastlane/report.xml
-*/fastlane/Preview.html
-*/fastlane/test_output/
-*/fastlane/screenshots/
-*/fastlane/README.md
-
-# Env & secrets
-*/fastlane/.env
-*/fastlane/.env.*
-*/fastlane/.secrets
-*/fastlane/.keys
-
-# Deliver/Metadata (se non vuoi tenerli in git)
-*/fastlane/metadata/**/*.txt
-*/fastlane/metadata/**/*.md
-*/fastlane/metadata/**/*.xml
-*/fastlane/metadata/**/*.json
-
+# === Personal: talk materials (local-only, see talk_script.md) ===
+/talk_script.*
+/talk_slides.*
