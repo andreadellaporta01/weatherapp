@@ -29,7 +29,7 @@ open class GeolocationModel(private val geolocator: Geolocator) : StateScreenMod
 
     open fun currentLocation() {
         screenModelScope.launch {
-            updateState { it.copy(loading = true, lastResult = null, location = null) }
+            updateState { it.copy(loading = true) }
             geolocator.current().onSuccess { location ->
                 updateState { it.copy(location = location, loading = false) }
             }.onFailed { geolocatorResultError ->
