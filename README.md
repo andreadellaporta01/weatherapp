@@ -1,6 +1,6 @@
 # WeatherApp
 
-WeatherApp is a Kotlin Multiplatform project that provides current weather conditions, along with hourly and weekly forecasts. You can check the weather for your current GPS location or search for specific cities. Save your favorite cities for quick access to their latest weather updates. The app supports English, Italian, and Spanish languages (language selection not available on the Web platform) and offers both light and dark themes.
+WeatherApp is a Kotlin Multiplatform project that provides current weather conditions, along with hourly and weekly forecasts. You can check the weather for your current GPS location or search for any city worldwide.
 
 This project is built with Compose Multiplatform, allowing it to run on Android, iOS, Desktop (Windows, macOS, Linux), and Web (WasmJs).
 
@@ -44,6 +44,25 @@ _Settings screen for theme and language selection (Dark Theme)_
 <img src="screenshots/settings_light.png" alt="Settings screen for theme and language selection (Light Theme)" width="300"/>
 _Settings screen for theme and language selection (Light Theme)_
 
+## Continuous Integration & Pipelines
+
+WeatherApp integrates CI/CD pipelines (see `.github/workflows/`) that:
+- Automatically run build, integration tests, and UI tests (found in `commonTest`) on every push and pull request.
+- Support deployment automation for development and release builds.
+- Perform code quality checks and linting.
+> The pipelines are fully customizable for additional automation needs. See the `.github/workflows/` directory for current configuration.
+
+## Secure Secret and API Key Management
+
+- Sensitive data such as the OpenWeatherMap API_KEY are handled securely through Gradle tasks and `local.properties`.
+- A custom Gradle task (`generateApiConfig`) reads the key from `local.properties` and generates the `ApiConfig.kt` file at build time, so the API key is never hardcoded.
+- The iOS app version is automatically updated through the `updatePlistVersion` Gradle task.
+
+## Integration and UI Testing
+
+- The `commonTest` directory contains multiplatform integration and UI tests, ensuring consistent validation of business logic across all targets.
+- The CI pipelines automatically execute all tests during each build.
+
 ## Platforms
 
 *   Android
@@ -79,12 +98,12 @@ _Settings screen for theme and language selection (Light Theme)_
 
 1.  **API Key:**
     *   Sign up at [OpenWeatherMap](https://openweathermap.org/appid) to get your free API key.
-    *   Create a `local.properties` file in the root directory of the project (`/Users/andreadellaporta/WeatherApp/local.properties`).
+    *   Create a `local.properties` file in the root directory of the project.
     *   Add your API key to this file:
         
-        '''properties
+        ```properties
         API_KEY=YOUR_OPENWEATHERMAP_API_KEY
-        '''
+        ```
 This key will be automatically picked up by the build process.
 
 ### Building and Running
@@ -97,22 +116,23 @@ This key will be automatically picked up by the build process.
 *   **Desktop:**
     Run the Gradle task `:composeApp:run` in Android Studio or from the command line:
     
-    '''bash
+    ```bash
     ./gradlew :composeApp:run
-    '''
+    ```
     Native distributions (dmg, msi, deb) can be built using tasks like `:composeApp:packageDmg`, `:composeApp:packageMsi`, or `:composeApp:packageDeb`.
 *   **Web (WasmJs):**
     Run the Gradle task `:composeApp:wasmJsBrowserDevelopmentRun` in Android Studio or from the command line:
     
-    '''bash
+    ```bash
     ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
-    '''
+    ```
     This will start a development server. Open the URL provided in the console (usually `http://localhost:8080`) in your browser.
 
 ## Project Structure
 
 *   `/composeApp`: Contains the shared Kotlin Multiplatform code and Compose Multiplatform UI.
     *   `commonMain`: Code common to all targets (Android, iOS, Desktop, Web).
+    *   `commonTest`: Multiplatform integration and UI tests.
     *   `androidMain`, `iosMain`, `desktopMain`, `wasmJsMain`: Platform-specific implementations and dependencies.
     *   `commonMain/composeResources`: Shared resources like images and fonts.
 *   `/iosApp`: The Xcode project for the iOS application.
@@ -126,10 +146,18 @@ The project includes a custom Gradle task `generateDrawableMap` (defined in `com
 *   **Functionality:** This generated file contains:
     *   Type-safe accessors (e.g., `Res.drawable.your_icon`) for each SVG.
     *   String constants (camelCased) for each drawable name (e.g., `val yourIcon = "your_icon"`).
-    *   A `drawableMap: Map<String, DrawableResource>` that maps the original SVG file names (e.g., "your\_icon") to their corresponding `DrawableResource` objects. This map can be useful for dynamically accessing drawables by name.
-*   **Integration:** The directory containing `GeneratedDrawableMap.kt` is automatically added as a source directory to the `commonMain` source set, making the generated code available across all platforms. Kotlin compilation tasks are configured to depend on `generateDrawableMap`, ensuring the map is generated before compilation.
+    *   A `drawableMap: Map<String, DrawableResource>` that maps the original SVG file names (e.g., "your_icon") to their corresponding `DrawableResource` objects. This map can be useful for dynamic or generic UI components.
+*   **Integration:** The directory containing `GeneratedDrawableMap.kt` is automatically added as a source directory to the `commonMain` source set, making the generated code available across all targets.
 
 This setup simplifies the management of shared drawable resources and provides a convenient way to reference them in code.
+
+---
+
+**Note:** For more details, see the relevant folders in the GitHub repository:
+- [GitHub Actions/Workflows](https://github.com/andreadellaporta01/weatherapp/tree/master/.github/workflows)
+- [Multiplatform Integration and UI Tests](https://github.com/andreadellaporta01/weatherapp/tree/master/composeApp/src/commonTest)
+
+...
 
 ## Feedback and Contributions
 
