@@ -109,8 +109,15 @@ When adding a card to the weather detail view:
 # Build (Android debug)
 ./gradlew :composeApp:assembleDebug
 
-# Common multiplatform tests (run these for any commonMain change)
-./gradlew :composeApp:commonTest
+# Run commonTest sources on the JVM target (fastest path for any commonMain change).
+# Note: `commonTest` is a Kotlin source set, NOT a Gradle task — there is no
+# `:composeApp:commonTest` task. KMP exposes one test task per target:
+#   desktopTest                 — JVM, fastest, use for iteration
+#   testDebugUnitTest           — Android JVM unit tests
+#   wasmJsTest                  — WASM
+#   iosX64Test / iosSimulatorArm64Test / iosArm64Test
+#   allTests                    — aggregate of all of the above
+./gradlew :composeApp:desktopTest
 
 # Desktop run
 ./gradlew :composeApp:run
@@ -124,8 +131,9 @@ When adding a card to the weather detail view:
 
 iOS: open `iosApp/iosApp.xcworkspace` in Xcode and run.
 
-After any non-trivial change, run `:composeApp:commonTest` before declaring the
-work done.
+After any non-trivial change, run `:composeApp:desktopTest` before declaring
+the work done. (For changes that touch platform actuals, also run
+`:composeApp:allTests`.)
 
 ## Tests
 
@@ -188,7 +196,7 @@ Default workflow:
 2. List the files you intend to create or change before writing code.
 3. Implement the smallest version that works.
 4. Add tests in `commonTest` for any non-trivial logic, including boundaries.
-5. Run `:composeApp:commonTest` and `detekt`.
+5. Run `:composeApp:desktopTest` and `detekt`.
 6. Surface any assumption you are not confident about *before* declaring done.
 
 ## Useful entry points
